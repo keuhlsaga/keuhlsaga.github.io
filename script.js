@@ -91,6 +91,7 @@ $(document).ready(() => {
     const discover = `https://api.themoviedb.org/3/trending/all/day?api_key=${API_KEY}`;
     const movieNowPlaying = `https://api.themoviedb.org/3/movie/now_playing?api_key=${API_KEY}&language=en-US&page=1`;
     const tvAiringToday = `https://api.themoviedb.org/3/tv/airing_today?api_key=${API_KEY}&language=en-US&page=1`;
+    let searched = false;
     let movieUpcoming, movieTopRated, tvLatest, tvUpcoming;
 
     async function getApi(url) {
@@ -147,7 +148,7 @@ $(document).ready(() => {
                             $('#autoplay').addClass('auto');
                         }
                     });
-                    
+
                     // Height of one content in upNext div
                     let upNext = $('.featured-poster-up-next'),
                         upNextContentHeight = $('.featured-poster-up-next').children().innerHeight();
@@ -232,17 +233,17 @@ $(document).ready(() => {
                 $(document).on('click', e => {
                     // Search item
                     if (e.target.closest('.search-item')) {
-                        const id = e.target.dataset.id;
-                        const type = e.target.dataset.type;
-                        const aggregate = '';
-                        $('.search-result').hide();
-                        if (type === 'tv') {
-                            aggregate = 'aggregate_';
-                        }
-                        const apiCredits = `https://api.themoviedb.org/3/${type}/${id}/${aggregate}credits?api_key=${API_KEY}&language=en-US`;
-                        const apiDetails = `https://api.themoviedb.org/3/${type}/${id}?api_key=${API_KEY}&language=en-US`;
-                        const apiTrailer = `https://api.themoviedb.org/3/${type}/${id}/videos?api_key=${API_KEY}&language=en-US`;
                         (async () => {
+                            const id = e.target.dataset.id;
+                            const type = e.target.dataset.type;
+                            const aggregate = '';
+                            $('.search-result').hide();
+                            if (type === 'tv') {
+                                aggregate = 'aggregate_';
+                            }
+                            const apiCredits = `https://api.themoviedb.org/3/${type}/${id}/${aggregate}credits?api_key=${API_KEY}&language=en-US`;
+                            const apiDetails = `https://api.themoviedb.org/3/${type}/${id}?api_key=${API_KEY}&language=en-US`;
+                            const apiTrailer = `https://api.themoviedb.org/3/${type}/${id}/videos?api_key=${API_KEY}&language=en-US`;
                             const details = await getApi(apiDetails);
                             const credits = await getApi(apiCredits);
                             const trailer = await getApi(apiTrailer);
@@ -256,18 +257,18 @@ $(document).ready(() => {
                                         obj.type = type;
                                         setSliderCast(obj, $('#searchDetails #sliderCast'));
                                     });
-                                    sliderSearch = new Slider(document.querySelector('#searchDetails #sliderCast'));
-                                    $('#searchDetails').parent().removeClass("hidden");
+                                    $('#searchDetails').parent().show();
                                     $('#searchDetailsSpinner').hide();
-                                    $('#searchDetails .details-detail').show();
-                                    $('#searchDetails .details-trailer').hide();
-                                    $('#searchDetails .details-cast').hide();
-                                    // $('#searchDetails').show();
-                                    // $('#searchDetails>.details-content').show();
-                                    if (!$('#searchDetails>.details-content').hasClass('show-details-content')) {
+                                    // $('#searchDetails .details-detail').show();
+                                    // $('#searchDetails .details-trailer').hide();
+                                    // $('#searchDetails .details-cast').hide();
+                                    sliderSearch = new Slider(document.querySelector('#searchDetails #sliderCast'));
+                                    setNavSliderWidth('#searchDetails');
+                                    if (searched === false) {
                                         $('#searchDetails').toggleClass('show-details');
                                         $('#searchDetails>.details-content').toggleClass('show-details-content');
                                     }
+                                    searched = true;
                                 });
                         })();
                         return false;
@@ -420,6 +421,12 @@ $(document).ready(() => {
                         if (detail === 'searchDetails') {
                             // console.log('search');
                             $('#searchDetails').toggleClass('show-details');
+                            $(`#searchDetails>.details-content`).toggleClass('show-details-content');
+                            setTimeout(() => {
+                                // $('#tvDetails').parent().addClass('hidden');
+                                $(`#searchDetails`).parent().hide();
+                            }, 999);
+                            searched = false;
                             // $('#searchDetails>.details-content').toggleClass('show-details-content');
                         } else {
                             let slider;

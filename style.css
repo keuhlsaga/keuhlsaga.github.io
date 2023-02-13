@@ -9,11 +9,11 @@
 }
 
 body {
-    background: url('img/wallhaven-l36rkr.jpg') no-repeat center center fixed;
+    /* background: url('img/wallhaven-l36rkr.jpg') no-repeat center center fixed;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
-    background-size: cover;
+    background-size: cover; */
     color: #fff;
     background: rgb(30, 30, 30);
     /* background: rgb(24, 24, 26); */
