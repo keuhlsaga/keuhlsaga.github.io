@@ -15,7 +15,8 @@ body {
     -o-background-size: cover;
     background-size: cover;
     color: #fff;
-    /* background: #1b1b1b; */
+    background: rgb(30, 30, 30);
+    /* background: rgb(24, 24, 26); */
 }
 
 /* Navbar */
@@ -356,8 +357,9 @@ body {
 
 .slider-item {
     flex: 1;
-    border-radius: var(--img-radius);
-    background: var(--linear-gradient-bw);
+    border-radius: calc(var(--img-radius) / 2);
+    /* background: var(--linear-gradient-bw); */
+    background: rgba(0, 0, 0, 0.8);
     cursor: pointer;
     color: #fff;
 }
@@ -376,7 +378,7 @@ body {
 
 .slider-item>img {
     width: var(--slider-img-width);
-    border-radius: var(--img-radius);
+    border-radius: calc(var(--img-radius) / 2);
     aspect-ratio: 6 / 9;
     /* height: 250px; */
     object-fit: cover;
@@ -808,40 +810,55 @@ body {
     padding: 0 5px;
 }
 
-@media (max-width: 720px) {
-    body {
-        font-size: .9rem !important;
+@media (max-width: 766px) {
+    .carousel-caption {
+        display: block !important;
+        height: 90px;
+        padding: 5px 0;
+    }
+    .carousel-caption * {
+        font-size: 1rem !important;
+    }
+}
+
+@media (max-width: 420px) {
+    body * {
+        /* font-size: 1rem !important; */
     }
     .carousel-caption {
         display: block !important;
         height: 50px;
         padding: 5px 0;
-        vertical-align: middle;
+    }
+    .carousel-caption * {
+        margin: 0 !important;
+    }
+    .carousel-caption h3 {
+        font-size: .7rem !important;
     }
     .carousel-caption h1 {
         margin-left: auto !important;
-    }
-    .carousel-caption * {
-        font-size: .7rem !important;
-        margin: 0 !important;
-    }
-    .carousel-caption p {
-        font-size: .5rem !important;
     }
     .carousel-caption p>i {
         font-size: .5rem !important;
         margin-right: 3px !important;
     }
+    .carousel-caption p {
+        margin-top: 4px !important;
+        font-size: .6rem !important;
+    }
     .slider {
-        height: 329px;
+        height: 308px;
+        /* height: min-content; */
+        gap: 6px;
         /* padding: 0; */
     }
     .slider-item {
-        width: 120px;
+        width: 130px;
         /* height: max-content; */
     }
     .slider-item > img {
-        width: 120px;
+        width: 130px;
     }
     .slider-indicator {
         display: none;

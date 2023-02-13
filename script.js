@@ -756,11 +756,11 @@ $(document).ready(() => {
         $('.carousel-inner').html(carousel + `<div class="carousel-item ${is_active}">
             <img src="${BASE_URL_IMG_ORIGINAL}${data.backdrop_path}" class="d-block w-100 carousel-img" alt="...">
             <div class="carousel-caption d-none d-md-block">
+                <h3>${data.title || data.name}</h3>
                 <div style="display: flex;">
-                    <h3>${data.title || data.name}</h3>
+                    <p><i class="bi bi-star-fill me-2 star"></i>${data.vote_average.toFixed(1)}</p>
                     <h1 class="ms-auto">${mediaType}</h1>
                 </div>
-                <p><i class="bi bi-star-fill me-2 star"></i>${data.vote_average.toFixed(1)}</p>
             </div>
         </div>`);
         // w220_and_h330_face
