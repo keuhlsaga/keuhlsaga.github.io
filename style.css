@@ -35,6 +35,7 @@ body {
     padding: 0 10px;
     border: none;
 }
+
 .navbar-toggler:hover {
     background: rgb(0, 0, 0, 0.2);
 }
@@ -89,6 +90,12 @@ body {
     min-width: 125%;
     transform: rotate(-40deg);
     background: var(--toggler-icon-close);
+}
+
+.navbar-brand,
+.container {
+    padding-left: 8px !important;
+    padding-right: 8px !important;
 }
 
 .go-to-top {
@@ -183,6 +190,15 @@ body {
     text-align: start !important;
     background-image: linear-gradient(90deg, rgba(0, 0, 0), rgb(255, 255, 255, 0));
     /* background-image: linear-gradient(90deg, rgba(0, 0, 0, 0.5), rgba(16, 21, 26, 0.3), #373737, rgba(93, 93, 93, 0.2), rgba(169, 169, 169, 0.1), rgb(255, 255, 255, 0)); */
+}
+
+.carousel-caption .carousel-link {
+    color: #fff;
+    text-decoration: none;
+}
+
+.carousel-caption .play {
+    font-size: 3rem;
 }
 
 .carousel-control-prev,
@@ -454,7 +470,7 @@ body {
 }
 
 .slider-item>img {
-    width: var(--slider-img-width);
+    max-width: var(--slider-img-width);
     border-radius: calc(var(--img-radius) / 2);
     aspect-ratio: 6 / 9;
     /* height: 250px; */
@@ -497,7 +513,7 @@ body {
     /* visibility: hidden; */
     transition: opacity 1s ease, height 1s ease;
     color: #fff;
-    border-radius: .5rem;
+    /* border-radius: .5rem; */
     margin-bottom: 5px;
 }
 
@@ -523,7 +539,7 @@ body {
     padding: 2.6rem;
     gap: 1rem;
     background: rgba(0, 0, 0, 0.8);
-    border-radius: .5rem;
+    /* border-radius: .5rem; */
     min-height: 100%;
 
     /* new */
@@ -655,7 +671,7 @@ body {
 }
 
 .nav-slider button:hover {
-    color:rgb(255,255,255, 0.8);
+    color: rgb(255, 255, 255, 0.8);
 }
 
 .nav-slider-slider {
@@ -838,7 +854,7 @@ body {
 
     transform: scale(0.4);
     right: -20px;
-    top: -20px;
+    top: -22px;
     border-radius: 50% !important;
 
     /* left: 50%;
@@ -846,10 +862,11 @@ body {
 }
 
 .spinner-center-inline {
-    background:rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0.5);
     text-align: center;
     border-radius: 5px;
 }
+
 .spinner-center-inline * {
     transform: scale(0.5);
 }
@@ -870,17 +887,13 @@ body {
     color: #000;
 }
 
-.search-result a:last-child {
-    border-bottom: none !important;
-}
-
 .search-result a:hover div {
     background: rgba(0, 0, 0, 0.2);
 }
 
 .search-item {
     padding: .5rem;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.5) !important;
+    border-top: 1px solid rgba(0, 0, 0, 0.5) !important;
 }
 
 .search-result img {
@@ -926,25 +939,25 @@ body {
     .carousel-caption * {
         font-size: 1rem !important;
     }
+
+    .carousel-caption h3 {
+        font-size: 1.3rem !important;
+    }
 }
 
 @media (max-width: 580px) {
-    body * {
-        /* font-size: 1rem !important; */
+    body {
+        font-size: .8rem !important;
     }
 
     .carousel-caption {
         display: block !important;
-        height: 50px;
+        height: 80px;
         padding: 5px 0;
     }
 
     .carousel-caption * {
-        margin: 0 !important;
-    }
-
-    .carousel-caption h3 {
-        font-size: .7rem !important;
+        /* margin: 0 !important; */
     }
 
     .carousel-caption h1 {
@@ -968,7 +981,14 @@ body {
         padding-left: 9px !important;
         padding-right: 9px !important;
         /* padding: 0; */
+        -ms-overflow-style: none !important;
+        scrollbar-width: none !important;
     }
+
+    .slider::-webkit-scroller {
+        display: none !important;
+    }
+
     .snaps-inline {
         scroll-padding-inline: 18px !important;
     }
@@ -1024,21 +1044,6 @@ body {
         width: 104px !important;
         /* height: 10px !important; */
     }
-}
-
-@media (max-width: 580px) {
-    body {
-        font-size: .8rem !important;
-    }
-
-    .slider {
-        -ms-overflow-style: none !important;
-        scrollbar-width: none !important;
-    }
-
-    .slider::-webkit-scroller {
-        display: none !important;
-    }
 
     .container-xxl {
         padding: 0;
@@ -1083,9 +1088,24 @@ body {
     .snaps-inline {
         scroll-padding-inline: 12px !important;
     }
+
+    .slider-item:hover {
+        transform: none !important;
+    }
 }
 
 @media (max-width: 375px) {
+
+    .carousel-caption {
+        height: 60px;
+        padding: 5px 0;
+    }
+
+    .carousel-caption h3 {
+        font-size: 1rem !important;
+        margin-bottom: 2px !important;
+    }
+
     .snaps-inline {
         scroll-padding-inline: 54px !important;
         /* scroll-padding-inline: 14% !important; */
@@ -1093,6 +1113,10 @@ body {
 }
 
 @media (max-width: 320px) {
+    .carousel-caption h3 {
+        font-size: .8rem !important;
+    }
+
     .snaps-inline {
         scroll-padding-inline: 26px !important;
         /* scroll-padding-inline: 8% !important; */

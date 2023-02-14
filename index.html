@@ -39,19 +39,20 @@
                             </select>
                             <input type="search" class="form-control shadow-none border-0" id="navSearchInputText"
                                 placeholder="Search movies and TV shows...">
-                            <div class="arc-reactor-spinner spinner-dark spinner-inline hidden"
-                                id="searchDetailsSpinner">
-                                <div class="outer"></div>
-                                <div class="outer"></div>
-                                <div class="outer"></div>
-                                <div class="outer"></div>
-                                <div class="outer"></div>
-                                <div class="outer"></div>
-                                <div class="outer"></div>
-                                <div class="outer"></div>
-                                <div class="outer"></div>
-                                <div class="outer"></div>
-                                <div class="center"></div>
+                            <div class="spinner-inline hidden" id="searchDetailsSpinner">
+                                <div class="arc-reactor-spinner spinner-dark">
+                                    <div class="outer"></div>
+                                    <div class="outer"></div>
+                                    <div class="outer"></div>
+                                    <div class="outer"></div>
+                                    <div class="outer"></div>
+                                    <div class="outer"></div>
+                                    <div class="outer"></div>
+                                    <div class="outer"></div>
+                                    <div class="outer"></div>
+                                    <div class="outer"></div>
+                                    <div class="center"></div>
+                                </div>
                             </div>
                         </div>
                     </li>
@@ -75,7 +76,10 @@
     <section class="container-fluid container-xxl hidden">
     </section>
     <!-- Search Details -->
-    <section class="container-fluid container-xxl pop-down hidden">
+    <section class="container-fluid container-xxl mt-2 pop-down hidden">
+        <div class="details" id="searchDetails">
+            <div class="details-content"></div>
+        </div>
         <!-- <div class="arc-reactor-spinner spinner-inline"  id="searchDetailsSpinner">
             <div class="outer"></div>
             <div class="outer"></div>
@@ -89,9 +93,6 @@
             <div class="outer"></div>
             <div class="center"></div>
         </div> -->
-        <div class="details" id="searchDetails">
-            <div class="details-content"></div>
-        </div>
     </section>
     <!-- Discover -->
     <section class="">

@@ -86,6 +86,7 @@ class Slider {
 }
 
 $(document).ready(() => {
+    $('#navSearchInputText').val('');
 
     // const discover = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=1&with_watch_monetization_types=flatrate`;
     const discover = `https://api.themoviedb.org/3/trending/all/day?api_key=${API_KEY}`;
@@ -421,57 +422,20 @@ $(document).ready(() => {
                     if (e.target.closest('#closeDetails')) {
                         const detail = e.target.closest('#closeDetails').parentElement.parentElement.parentElement.parentElement.id;
                         // console.log(detail);
-                        if (detail === 'searchDetails') {
-                            // console.log('search');
-                            $('#searchDetails').toggleClass('show-details');
-                            $(`#searchDetails>.details-content`).toggleClass('show-details-content');
-                            setTimeout(() => {
-                                // $('#tvDetails').parent().addClass('hidden');
-                                $(`#searchDetails`).parent().hide();
-                            }, 999);
-                            searched = false;
-                            // $('#searchDetails>.details-content').toggleClass('show-details-content');
-                        } else {
+                        if (detail !== 'searchDetails') {
                             let slider;
                             if (detail === 'movieDetails') {
                                 slider = 'sliderMovie';
                             } else {
                                 slider = 'sliderTv';
                             }
-                            // console.log('here');
                             $(`#${slider}>.slider-item`).removeClass('active');
-                            $(`#${detail}>.details-content`).hide().animate({ height: '0' }, 5000);
-                            $(`#${detail}>.details-content`).toggleClass('show-details-content');
-                            $(`#${detail}`).toggleClass('show-details');
-                            setTimeout(() => {
-                                // $('#tvDetails').parent().addClass('hidden');
-                                // $(`#${detail}`).parent().hide();
-                            }, 1000);
                         }
+                        $(`#${detail}>.details-content`).hide().animate({ height: '0' }, 5000);
+                        $(`#${detail}>.details-content`).toggleClass('show-details-content');
+                        $(`#${detail}`).toggleClass('show-details');
                         $(`#${detail}.details-trailer`).hide();
                         $(`#${detail}.details-trailer>.trailer-container`).hide();
-                        // else if (detail === 'movieDetails') {
-                        //     console.log('movie');
-                        //     $('#sliderMovie>.slider-item').removeClass('active');
-                        //     $('#movieDetails').toggleClass('show-details');
-                        //     $('#movieDetails>.details-content').toggleClass('show-details-content');
-                        //     setTimeout(() => {
-                        //         // $('#movieDetails').parent().addClass('hidden');
-                        //         $('#movieDetails').parent().hide();
-                        //     }, 999);
-                        // } else {
-                        //     console.log('tv');
-                        //     $('#sliderTv>.slider-item').removeClass('active');
-                        //     $('#tvDetails').toggleClass('show-details');
-                        //     $('#tvDetails>.details-content').toggleClass('show-details-content');
-                        //     setTimeout(() => {
-                        //         // $('#tvDetails').parent().addClass('hidden');
-                        //         $('#tvDetails').parent().hide();
-                        //     }, 999);
-                        // }
-                        // $('#sliderMovie>.slider-item').removeClass('active');
-                        // $('#movieDetails').toggleClass('show-details');
-                        // $('#movieDetails>.details-content').toggleClass('show-details-content');
                     }
 
                     // Nav slider
@@ -841,10 +805,17 @@ function setCarousel(data, i) {
     }
     $('.carousel-inner').html(carousel + `<div class="carousel-item ${is_active}">
         <img src="${BASE_URL_IMG_ORIGINAL}${data.backdrop_path}" class="d-block w-100 carousel-img" alt="...">
-        <div class="carousel-caption d-none d-md-block">
-            <h3>${data.title || data.name}</h3>
-            <div style="display: flex;">
+        <div class="carousel-caption d-none d-md-block flex-grow-0">
+            <div class="d-flex">
+            
+                <h3>${data.title || data.name}</h3>
+            </div>
+            <div class="d-flex">
                 <p><i class="bi bi-star-fill me-2 star"></i>${data.vote_average.toFixed(1)}</p>
+                
+                <a class="carousel-link flex-grow-0" href="" id="play">
+                <i class="bi bi-play-circle-fill ms-2 play"></i>
+                </a>
                 <h1 class="ms-auto">${mediaType}</h1>
             </div>
         </div>
@@ -865,6 +836,7 @@ function setUpNext(data) {
             <div>
                 <h5>${data.title || data.name}</h5>
                 <p><i class="bi bi-star-fill me-2 star"></i>${data.vote_average.toFixed(1)}</p>
+                <i class="bi bi-play-circle-fill ms-2 play"></i>
             </div>
         </div>`);
 }
