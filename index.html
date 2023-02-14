@@ -23,7 +23,8 @@
             <a class="navbar-brand" href="#" id="detailss">GoMovies</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#goNav"
                 aria-controls="goNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
+                <!-- <span class="navbar-toggler-icon"></span> -->
+                <span class="icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="goNav">
                 <ul class="navbar-nav search-box">
@@ -38,9 +39,20 @@
                             </select>
                             <input type="search" class="form-control shadow-none border-0" id="navSearchInputText"
                                 placeholder="Search movies and TV shows...">
-                            <button class="btn btn-outline-secondary" id="navSearchBtn" type="button">
-                                <i class="bi bi-search" id="navSearchIcon"></i>
-                            </button>
+                            <div class="arc-reactor-spinner spinner-dark spinner-inline hidden"
+                                id="searchDetailsSpinner">
+                                <div class="outer"></div>
+                                <div class="outer"></div>
+                                <div class="outer"></div>
+                                <div class="outer"></div>
+                                <div class="outer"></div>
+                                <div class="outer"></div>
+                                <div class="outer"></div>
+                                <div class="outer"></div>
+                                <div class="outer"></div>
+                                <div class="outer"></div>
+                                <div class="center"></div>
+                            </div>
                         </div>
                     </li>
                 </ul>
@@ -60,23 +72,25 @@
         <div class="search-result hidden">
         </div>
     </section>
+    <section class="container-fluid container-xxl hidden">
+    </section>
     <!-- Search Details -->
     <section class="container-fluid container-xxl pop-down hidden">
+        <!-- <div class="arc-reactor-spinner spinner-inline"  id="searchDetailsSpinner">
+            <div class="outer"></div>
+            <div class="outer"></div>
+            <div class="outer"></div>
+            <div class="outer"></div>
+            <div class="outer"></div>
+            <div class="outer"></div>
+            <div class="outer"></div>
+            <div class="outer"></div>
+            <div class="outer"></div>
+            <div class="outer"></div>
+            <div class="center"></div>
+        </div> -->
         <div class="details" id="searchDetails">
             <div class="details-content"></div>
-            <div class="arc-reactor-spinner spinner-center" id="searchDetailsSpinner">
-                <div class="outer"></div>
-                <div class="outer"></div>
-                <div class="outer"></div>
-                <div class="outer"></div>
-                <div class="outer"></div>
-                <div class="outer"></div>
-                <div class="outer"></div>
-                <div class="outer"></div>
-                <div class="outer"></div>
-                <div class="outer"></div>
-                <div class="center"></div>
-            </div>
         </div>
     </section>
     <!-- Discover -->
@@ -111,30 +125,30 @@
                     </div>
                     <div class="featured-poster-up-next"></div>
                 </div>
-            </div>
-            <div class="arc-reactor-spinner spinner-center" id="carouselSpinner">
-                <div class="outer"></div>
-                <div class="outer"></div>
-                <div class="outer"></div>
-                <div class="outer"></div>
-                <div class="outer"></div>
-                <div class="outer"></div>
-                <div class="outer"></div>
-                <div class="outer"></div>
-                <div class="outer"></div>
-                <div class="outer"></div>
-                <div class="center"></div>
+                <div class="arc-reactor-spinner spinner-center" id="carouselSpinner">
+                    <div class="outer"></div>
+                    <div class="outer"></div>
+                    <div class="outer"></div>
+                    <div class="outer"></div>
+                    <div class="outer"></div>
+                    <div class="outer"></div>
+                    <div class="outer"></div>
+                    <div class="outer"></div>
+                    <div class="outer"></div>
+                    <div class="outer"></div>
+                    <div class="center"></div>
+                </div>
             </div>
         </div>
     </section>
     <!-- Movie -->
     <section class="movie" id="movie">
         <div class="container-fluid container-xxl" id="test">
-            <h3>What's new?</h3>
+            <h3>Movie</h3>
             <div class="group-header">
                 <div class="nav-slider" id="movieNav">
-                    <button type="button" class="nav-slider-btn" data-index="0" >Latest</button>
-                    <button type="button" class="nav-slider-btn" data-index="1">Top Rated</button>
+                    <button type="button" class="nav-slider-btn" data-index="0">Latest</button>
+                    <button type="button" class="nav-slider-btn" data-index="1">Popular</button>
                     <button type="button" class="nav-slider-btn" data-index="2">Upcoming</button>
                     <span class="nav-slider-slider"></span>
                 </div>
@@ -200,7 +214,7 @@
             <div class="group-header">
                 <div class="nav-slider" id="tvNav">
                     <button type="button" class="nav-slider-btn" data-index="0">Latest</button>
-                    <button type="button" class="nav-slider-btn" data-index="1">Top Rated</button>
+                    <button type="button" class="nav-slider-btn" data-index="1">Popular</button>
                     <!-- <button type="button" class="nav-slider-btn" data-index="2">Upcoming</button> -->
                     <span class="nav-slider-slider"></span>
                 </div>
@@ -241,32 +255,35 @@
         </div>
     </section>
     <!-- TV Details -->
+    <section class="container-fluid container-xxl spinner-center-inline hidden" id="tvDetailsSpinner">
+        <div class="arc-reactor-spinner">
+            <div class="outer"></div>
+            <div class="outer"></div>
+            <div class="outer"></div>
+            <div class="outer"></div>
+            <div class="outer"></div>
+            <div class="outer"></div>
+            <div class="outer"></div>
+            <div class="outer"></div>
+            <div class="outer"></div>
+            <div class="outer"></div>
+            <div class="center"></div>
+        </div>
+    </section>
     <section class="container-fluid container-xxl pop-down hidden">
         <div class="details" id="tvDetails">
-            <div class="arc-reactor-spinner spinner-center" id="tvDetailsSpinner">
-                <div class="outer"></div>
-                <div class="outer"></div>
-                <div class="outer"></div>
-                <div class="outer"></div>
-                <div class="outer"></div>
-                <div class="outer"></div>
-                <div class="outer"></div>
-                <div class="outer"></div>
-                <div class="outer"></div>
-                <div class="outer"></div>
-                <div class="center"></div>
-            </div>
             <div class="details-content"></div>
         </div>
     </section>
     <section class="footer">
-        <div class="container-fluid container-xxl">
+        <div class="container-fluid container-xxl flex-column">
             <a href="https://www.themoviedb.org">
                 <img class="tmdb-logo" src="img/tmdb.svg" alt="The Movie Database (TMDB)" width="154" height="20">
             </a>
-            <br>
-            This product uses the TMDB API but is not endorsed or certified by TMDB.
-            <a href="#" class="go-to-top"><i class="bi bi-arrow-up-circle" style="color:white;"></i></a>
+            <p>
+                This product uses the TMDB API but is not endorsed or certified by TMDB.
+                <a href="#" class="go-to-top"><i class="bi bi-arrow-up-circle" style="color:white;"></i></a>
+            </p>
         </div>
     </section>
     <!-- Back to portfolio -->

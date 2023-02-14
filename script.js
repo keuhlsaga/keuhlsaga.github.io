@@ -14,7 +14,7 @@ const SLIDER_ITEM_WIDTH = parseInt(getComputedStyle(document.documentElement)
     .getPropertyValue('--slider-img-width').replace('rem', '') * 16);
 
 class Slider {
-    constructor(element, itemPerGroup) {
+    constructor(element) {
         this.element = element;
         this.sliderWidth = element.offsetWidth;
         this.maxScrollWidth = element.scrollWidth;
@@ -233,20 +233,24 @@ $(document).ready(() => {
                 $(document).on('click', e => {
                     // Search item
                     if (e.target.closest('.search-item')) {
+
+                        // $('#searchDetails').css('background', 'none');
+                        $('#searchDetails').parent().show();
+                        if (searched === false) {
+                        }
+                        $('#searchDetailsSpinner').show();
                         (async () => {
                             const id = e.target.dataset.id;
                             const type = e.target.dataset.type;
-                            const aggregate = '';
+                            let aggregate = '';
                             $('.search-result').hide();
                             if (type === 'tv') {
                                 aggregate = 'aggregate_';
                             }
-                            const apiCredits = `https://api.themoviedb.org/3/${type}/${id}/${aggregate}credits?api_key=${API_KEY}&language=en-US`;
-                            const apiDetails = `https://api.themoviedb.org/3/${type}/${id}?api_key=${API_KEY}&language=en-US`;
-                            const apiTrailer = `https://api.themoviedb.org/3/${type}/${id}/videos?api_key=${API_KEY}&language=en-US`;
-                            const details = await getApi(apiDetails);
-                            const credits = await getApi(apiCredits);
-                            const trailer = await getApi(apiTrailer);
+                            console.log(id, type);
+                            const details = await getApi(`https://api.themoviedb.org/3/${type}/${id}?api_key=${API_KEY}&language=en-US`);
+                            const credits = await getApi(`https://api.themoviedb.org/3/${type}/${id}/${aggregate}credits?api_key=${API_KEY}&language=en-US`);
+                            const trailer = await getApi(`https://api.themoviedb.org/3/${type}/${id}/videos?api_key=${API_KEY}&language=en-US`);
 
                             Promise.allSettled([details, credits, trailer])
                                 .then(() => {
@@ -257,17 +261,17 @@ $(document).ready(() => {
                                         obj.type = type;
                                         setSliderCast(obj, $('#searchDetails #sliderCast'));
                                     });
-                                    $('#searchDetails').parent().show();
-                                    $('#searchDetailsSpinner').hide();
                                     // $('#searchDetails .details-detail').show();
                                     // $('#searchDetails .details-trailer').hide();
                                     // $('#searchDetails .details-cast').hide();
-                                    sliderSearch = new Slider(document.querySelector('#searchDetails #sliderCast'));
-                                    setNavSliderWidth('#searchDetails');
                                     if (searched === false) {
                                         $('#searchDetails').toggleClass('show-details');
+                                        $('#searchDetails>.details-content').show().animate({ height: '550px' }, 1000);
                                         $('#searchDetails>.details-content').toggleClass('show-details-content');
                                     }
+                                    $('#searchDetailsSpinner').hide();
+                                    sliderSearch = new Slider(document.querySelector('#searchDetails #sliderCast'));
+                                    setNavSliderWidth('#searchDetails');
                                     searched = true;
                                 });
                         })();
@@ -300,13 +304,11 @@ $(document).ready(() => {
                         if (parentId === 'sliderMovie') {
                             // console.log($(e.target.closest('.slider-item')));
                             if (!$(e.target.closest('.slider-item')).hasClass('active')) {
+                                $('#movieDetails').parent().show();
                                 (async () => {
-                                    const apiMovieCredits = `https://api.themoviedb.org/3/movie/${id}/credits?api_key=${API_KEY}&language=en-US`;
-                                    const apiMovieDetails = `https://api.themoviedb.org/3/movie/${id}?api_key=${API_KEY}&language=en-US`;
-                                    const apiMovieTrailer = `https://api.themoviedb.org/3/movie/${id}/videos?api_key=${API_KEY}&language=en-US`;
-                                    const movieDetails = await getApi(apiMovieDetails);
-                                    const movieCredits = await getApi(apiMovieCredits);
-                                    const movieTrailer = await getApi(apiMovieTrailer);
+                                    const movieDetails = await getApi(`https://api.themoviedb.org/3/movie/${id}?api_key=${API_KEY}&language=en-US`);
+                                    const movieCredits = await getApi(`https://api.themoviedb.org/3/movie/${id}/credits?api_key=${API_KEY}&language=en-US`);
+                                    const movieTrailer = await getApi(`https://api.themoviedb.org/3/movie/${id}/videos?api_key=${API_KEY}&language=en-US`);
 
                                     Promise.allSettled([movieDetails, movieCredits, movieTrailer])
                                         .then(() => {
@@ -324,21 +326,21 @@ $(document).ready(() => {
                                                 obj.type = 'movie';
                                                 setSliderCast(obj, $('#movieDetails #sliderCast'));
                                             });
-                                            $('#movieDetails').parent().show();
                                             $('#movieDetailsSpinner').hide();
-                                            $('#movieDetails .details-detail').show();
-                                            $('#movieDetails .details-trailer').hide();
-                                            $('#movieDetails .details-cast').hide();
-                                            sliderCast = new Slider(document.querySelector('#movieDetails #sliderCast'));
-                                            setNavSliderWidth('#movieDetails');
+                                            // $('#movieDetails .details-detail').show();
+                                            // $('#movieDetails .details-trailer').hide();
+                                            // $('#movieDetails .details-cast').hide();
 
                                             if ($('#sliderMovie .slider-item').siblings().hasClass('active')) {
                                                 $('#sliderMovie .slider-item').removeClass('active');
                                             } else {
                                                 $('#movieDetails').toggleClass('show-details');
+                                                $('#movieDetails>.details-content').show().animate({ height: '550px' }, 1000);
                                                 $('#movieDetails>.details-content').toggleClass('show-details-content');
                                             }
-                                            $(document).scrollTop($('#movieDetails').offset().top);
+                                            sliderCast = new Slider(document.querySelector('#movieDetails #sliderCast'));
+                                            setNavSliderWidth('#movieDetails');
+                                            $(document).scrollTop($('#movieDetails').offset().top - 25);
                                             e.target.closest('.slider-item').classList.add('active');
 
 
@@ -366,20 +368,20 @@ $(document).ready(() => {
                                         });
                                 })();
                             } else {
+                                console.log('what');
                                 $(e.target.closest('.slider-item')).removeClass('active');
                                 $('#movieDetails #closeDetails').click();
                             }
                         } else {
                             // TV slider
                             if (!$(e.target.closest('.slider-item')).hasClass('active')) {
+                                $('#tvDetailsSpinner').show();
                                 (async () => {
-                                    const apiTvCredits = `https://api.themoviedb.org/3/tv/${id}/aggregate_credits?api_key=${API_KEY}&language=en-US`;
-                                    const apiTvDetails = `https://api.themoviedb.org/3/tv/${id}?api_key=${API_KEY}&language=en-US`;
-                                    const apiTvTrailer = `https://api.themoviedb.org/3/tv/${id}/videos?api_key=${API_KEY}&language=en-US`;
                                     let isReady = [false, false, false];
-                                    const tvDetails = await getApi(apiTvDetails);
-                                    const tvCredits = await getApi(apiTvCredits);
-                                    const tvTrailer = await getApi(apiTvTrailer);
+                                    const tvDetails = await getApi(`https://api.themoviedb.org/3/tv/${id}?api_key=${API_KEY}&language=en-US`);
+                                    const tvCredits = await getApi(`https://api.themoviedb.org/3/tv/${id}/aggregate_credits?api_key=${API_KEY}&language=en-US`);
+                                    const tvTrailer = await getApi(`https://api.themoviedb.org/3/tv/${id}/videos?api_key=${API_KEY}&language=en-US`);
+
                                     Promise.allSettled([tvDetails, tvCredits, tvTrailer])
                                         .then(() => {
                                             tvDetails.trailer = tvTrailer.results[tvTrailer.results.length - 1] || "";
@@ -391,18 +393,19 @@ $(document).ready(() => {
                                             });
                                             $('#tvDetails').parent().show();
                                             $('#tvDetailsSpinner').hide();
-                                            $('#tvDetails .details-detail').show();
-                                            $('#tvDetails .details-trailer').hide();
-                                            $('#tvDetails .details-cast').hide();
-                                            sliderTvDetailsCast = new Slider(document.querySelector('#tvDetails #sliderCast'));
-                                            setNavSliderWidth('#tvDetails');
+                                            // $('#tvDetails .details-detail').show();
+                                            // $('#tvDetails .details-trailer').hide();
+                                            // $('#tvDetails .details-cast').hide();
 
                                             if ($('#sliderTv .slider-item').siblings().hasClass('active')) {
                                                 $('#sliderTv .slider-item').removeClass('active');
                                             } else {
                                                 $('#tvDetails').toggleClass('show-details');
+                                                $('#tvDetails>.details-content').show().animate({ height: '550px' }, 1000);
                                                 $('#tvDetails>.details-content').toggleClass('show-details-content');
                                             }
+                                            sliderTvDetailsCast = new Slider(document.querySelector('#tvDetails #sliderCast'));
+                                            setNavSliderWidth('#tvDetails');
                                             $(document).scrollTop($('#tvDetails').offset().top);
                                             e.target.closest('.slider-item').classList.add('active');
                                         });
@@ -437,12 +440,13 @@ $(document).ready(() => {
                             }
                             // console.log('here');
                             $(`#${slider}>.slider-item`).removeClass('active');
-                            $(`#${detail}`).toggleClass('show-details');
+                            $(`#${detail}>.details-content`).hide().animate({ height: '0' }, 5000);
                             $(`#${detail}>.details-content`).toggleClass('show-details-content');
+                            $(`#${detail}`).toggleClass('show-details');
                             setTimeout(() => {
                                 // $('#tvDetails').parent().addClass('hidden');
-                                $(`#${detail}`).parent().hide();
-                            }, 999);
+                                // $(`#${detail}`).parent().hide();
+                            }, 1000);
                         }
                         $(`#${detail}.details-trailer`).hide();
                         $(`#${detail}.details-trailer>.trailer-container`).hide();
@@ -672,6 +676,14 @@ $(document).ready(() => {
                         e.preventDefault();
                         $(document).scrollTop(0);
                     }
+
+                    // Close search result dropdown on click outside of result
+                    if (!e.target.closest('.search-item') && $('.search-result').is(':visible')
+                        && !e.target.closest('#navSearchInputText')) {
+                        $('.search-result').hide();
+                    }
+                    console.log($(e.target).attr('id'));
+                    console.log(!e.target.closest('#navSearchInputText'));
                 });
 
                 // Slider Movie scroll event
@@ -747,201 +759,6 @@ $(document).ready(() => {
         return false;
     });
 
-    // Insert trailers in carousel
-    function setCarousel(data, i) {
-        const carousel = $('.carousel-inner').html();
-        // const poster = $('.featured-poster-up-next').html();
-        // const indicator = $('.carousel-indicators').html();
-        let is_active;
-        if (i === 0) {
-            is_active = 'active';
-        }
-        let mediaType = '<i class="bi bi-film"></i>';
-        if (data.media_type === 'tv') {
-            mediaType = '<i class="bi bi-tv"></i>';
-        }
-        $('.carousel-inner').html(carousel + `<div class="carousel-item ${is_active}">
-            <img src="${BASE_URL_IMG_ORIGINAL}${data.backdrop_path}" class="d-block w-100 carousel-img" alt="...">
-            <div class="carousel-caption d-none d-md-block">
-                <h3>${data.title || data.name}</h3>
-                <div style="display: flex;">
-                    <p><i class="bi bi-star-fill me-2 star"></i>${data.vote_average.toFixed(1)}</p>
-                    <h1 class="ms-auto">${mediaType}</h1>
-                </div>
-            </div>
-        </div>`);
-        // w220_and_h330_face
-        // $('.featured-poster-up-next').html(poster + `<div class="featured-poster-up-next-content">
-        //         <img src="${BASE_URL_IMG_W500}${data.poster_path}" class="" alt="${data.title || data.name}">
-        //         <div>
-        //             <h3>${data.title || data.name}</h3>
-        //             <p>Rating: ${data.vote_average}</p>
-        //         </div>
-        //     </div>`);
-    }
-    function setUpNext(data) {
-        const poster = $('.featured-poster-up-next').html();
-        $('.featured-poster-up-next').html(poster + `<div class="featured-poster-up-next-content">
-                <img src="${BASE_URL_IMG_W500}${data.poster_path}" class="" alt="${data.title || data.name}">
-                <div>
-                    <h5>${data.title || data.name}</h5>
-                    <p><i class="bi bi-star-fill me-2 star"></i>${data.vote_average.toFixed(1)}</p>
-                </div>
-            </div>`);
-    }
-
-    // TODO: 
-    function setSlider(data, element) {
-        const fetchSlider = element.html();
-        const fetchIndicator = element.html();
-        // element.html(fetchSlider + `<div class="slider-item" data-details="{'id':${data.id}, 'title': '${data.title || data.name}', 'release_date': '${data.release_date}', 'poster_path': '${data.poster_path}', 'rating': ${data.vote_average}}">
-        // element.html(fetchSlider + `<div class="slider-item" data-details="[ '${data.id}', '${data.title || data.name}', '${data.release_date}', '${data.poster_path}', '${data.vote_average}' ]">
-        // const title = JSON.stringify(data.title || data.name);
-        // const overview = JSON.stringify(`${data.overview}`);
-        // console.log(escape(data.overview));
-        // console.log(title, overview);
-        // element.html(fetchSlider + `<div class="slider-item" data-details="{\"id\": \"${data.id}\",\"title\": \"${data.title}\",\"release_date\": \"${data.release_date}\",\"poster_path\": \"${data.poster_path}\",\"rating\": \"${data.vote_average}\",\"overview\": \"${data.overview}\"}">
-        // const overview = JSON.stringify(data.overview.replace("'","\'"));
-        const strData = JSON.stringify(data, function (key, value) {
-            if (key == 'overview') {
-                return value.replace(/'/g, "’");
-            } else {
-                return value;
-            }
-        });
-        // console.log('ESCAPED ', overview);
-        // console.log(jQuery.parseJSON(overview));
-        // element.html(fetchSlider + `<div class="slider-item" data-details='{"id": "${data.id}","title": ${data.title},"release_date": "${data.release_date}","poster_path": "${data.poster_path}","rating": "${data.vote_average}","overview": "${overview}"}'>
-        element.html(fetchSlider + `<div class="slider-item" data-details='${strData}'>
-            <img src="${BASE_URL_IMG_W500}${data.poster_path}" alt="${data.title || data.name}">
-            <div class="slider-item-details">
-                <h6>${data.title || data.name}</h6>
-                <p><i class="bi bi-star-fill me-2 star"></i>${data.vote_average}</p>
-            </div>
-        </div>`);
-    }
-
-    function setCast(data, element) {
-        const fetch = element.html();
-        const releaseDate = data.release_date;
-
-        let genres = [];
-        data.genres.forEach(obj => {
-            genres.push(obj.name);
-        });
-
-        // console.log(data.production_companies);
-
-        let logoCount = 0,
-            companyName = [];
-        productionCompanies = '<div class="company-logo">';
-
-        data.production_companies.forEach(obj => {
-            companyName.push(obj.name);
-            if (obj.logo_path !== null) {
-                productionCompanies += `<img src="${BASE_URL_IMG_W500}${obj.logo_path}" alt="${obj.name}">`;
-                logoCount++;
-            }
-        });
-        productionCompanies += '</div>';
-
-        if (logoCount === 0) {
-            productionCompanies = '';
-        }
-
-        // console.log(data);
-
-        // console.log(data.trailer);
-        // console.log(data.providers);
-        // xgZLXyqbYOc
-        // <iframe class="trailer" src="https://www.youtube.com/embed/${data.trailer.key}"></iframe>
-
-        // const releaseDate = new Date(data.release_date);
-        // console.log(data);
-        // console.log($('.details').innerHeight());
-        // console.log($('.details-right').outerHeight());
-        // console.log($('.details-content').outerHeight());
-        // $('.show-details').css('height', $('.show-details').innerHeight());
-        element.parent().css('background', `url(https://image.tmdb.org/t/p/w1920_and_h800_multi_faces${data.backdrop_path}) no-repeat 50% 50%`);
-        // element.parent().css('background', `url(${BASE_URL_IMG_ORIGINAL}${data.backdrop_path}) no-repeat 50% 50%`);
-        // element.html(`<img src="${BASE_URL_IMG_W500}${data.poster_path}" alt="" id="movieDetailsPoster">
-        element.html(`<div class="details-right">
-            <div class="close-details">
-                <button type="button" class="btn btn-lg ms-auto text-white" id="closeDetails">
-                    <i class="bi bi-x-lg"></i>
-                </button>
-            </div>
-            <div class="nav-slider mb-3" id="details-nav-slider">
-                <button type="button" class="nav-slider-btn" data-index="0">Details</button>
-                <button type="button" class="nav-slider-btn" data-index="1">Casts</button>
-                <button type="button" class="nav-slider-btn" data-index="2">Trailer</button>
-                <span class="nav-slider-slider"></span>
-            </div>
-            <div class="details-detail">
-                <img class="detail-poster" src="${BASE_URL_IMG_W500}${data.poster_path}" alt="" id="movieDetailsPoster">
-                <div style="padding:10px; vertical-align:center;">
-                    <h3>${data.title || data.name}</h3>
-                    <p class="rating">
-                        <i class="bi bi-star-fill me-2 star"></i>
-                        <span class="me-2">${data.vote_average.toFixed(1)} / 10</span> |
-                        <span class="ms-2 me-2">${data.release_date || data.first_air_date}</span> |
-                        <span class="ms-2 me-2">${genres.join(', ')}</span>
-                    </p>
-                    <p>${data.overview}</p>
-                    <p>Director: ${data.director}</p>
-                    <p>Production Companies: ${companyName.join(", ")}
-                    ${productionCompanies}
-                </div>
-            </div>
-            <div class="details-cast hidden">
-                <div class="media-slider">
-                    <button type="button" class="btn btn-lg btn-dark slider-btn-left hidden" id="slider-cast-btn-left"
-                        data-target="#sliderCast">
-                        <div class="chevron"><i class="bi bi-chevron-left"></i></div>
-                    </button>
-                    <button type="button" class="btn btn-lg btn-dark slider-btn-right" id="slider-cast-btn-right"
-                        data-target="#sliderCast">
-                        <div class="chevron"><i class="bi bi-chevron-right "></i></div>
-                    </button>
-                    <div class="slider snaps-inline" id="sliderCast"></div>
-                </div>
-            </div>
-            <div class="details-trailer hidden">
-                <div class="trailer-container hidden">
-                    <iframe class="trailer" src="https://www.youtube.com/embed/${data.trailer.key}" style="aspect-ratio: 1.85/1"></iframe>
-                </div>
-            </div>
-        </div>`);
-    }
-
-    function setSliderCast(data, element) {
-        // console.log(data);
-
-        const fetch = element.html();
-        let profile, character;
-        if (data.profile_path) {
-            profile = BASE_URL_IMG_W500 + data.profile_path;
-        } else {
-            if (data.gender === 1) {
-                profile = 'img/blank-profile-female.jpg';
-            } else {
-                profile = 'img/blank-profile-male.jpg';
-            }
-        }
-        if (data.type === 'movie') {
-            character = data.character;
-        } else {
-            character = data.roles[0].character;
-        }
-        element.html(fetch + `<div class="slider-item">
-            <div class="img-cast">
-                <img src="${profile}" alt="${data.title || data.name}">
-            </div>
-            <h5>${data.name}</h5>
-            <p>${character}</p>
-        </div>`);
-    }
-
     // Navbar search
     $('#navSearch').click((e) => {
         e.preventDefault();
@@ -959,6 +776,7 @@ $(document).ready(() => {
                 .addClass('bi-search');
             $('#navSearchSelect').hide();
             $('.search-result').hide();
+            $('#navSearchInputText').val('');
         }
         // $('#navSearchSelect').toggleClass('select-active');
         $('#navSearchInput').toggleClass('active');
@@ -969,13 +787,13 @@ $(document).ready(() => {
     // Scroll to first item on load
     $('.slider').scrollLeft(0);
 
-    $('#navSearchInputText').on('keyup', () => {
+    $('#navSearchInputText').on('keyup focus', () => {
         const searchInputWidth = $('#navSearchInputText').innerWidth();
         const searchInputLeft = $('#navSearchInputText').offset().left;
 
         $('.search-result').css({ 'width': searchInputWidth, 'left': searchInputLeft });
         let searchText = $('#navSearchInputText').val();
-        // if (searchText.length >= 5) {
+
         let type = $('#navSearchSelect').val();
         let searchUrl = `https://api.themoviedb.org/3/search/${type}?api_key=${API_KEY}&query=${searchText}`;
 
@@ -991,17 +809,221 @@ $(document).ready(() => {
                                     </div>
                                 </a>`);
                     });
-                    $('.search-result').show(250);
-                    console.log(data);
+                    $('.search-result').show().animate({ height: 'min-content' }, 1000);
                 });
         })();
-        // }
     });
 
-    // Set first width of nav slider slider
-    function setNavSliderWidth(parentElement) {
-        const firstNavWidth = $(`${parentElement} .nav-slider-slider`).siblings().first().innerWidth();
-        $(`${parentElement} .nav-slider-slider`).css('width', firstNavWidth);
+    
+
+$('.navbar-toggler').on('click', function() {
+    console.log('hey');
+    if (!$(this).hasClass('active')) {
+        $(this).addClass('active');
+    } else {
+        $(this).removeClass('active');
     }
 });
 
+});
+// Insert trailers in carousel
+function setCarousel(data, i) {
+    const carousel = $('.carousel-inner').html();
+    // const poster = $('.featured-poster-up-next').html();
+    // const indicator = $('.carousel-indicators').html();
+    let is_active;
+    if (i === 0) {
+        is_active = 'active';
+    }
+    let mediaType = '<i class="bi bi-film"></i>';
+    if (data.media_type === 'tv') {
+        mediaType = '<i class="bi bi-tv"></i>';
+    }
+    $('.carousel-inner').html(carousel + `<div class="carousel-item ${is_active}">
+        <img src="${BASE_URL_IMG_ORIGINAL}${data.backdrop_path}" class="d-block w-100 carousel-img" alt="...">
+        <div class="carousel-caption d-none d-md-block">
+            <h3>${data.title || data.name}</h3>
+            <div style="display: flex;">
+                <p><i class="bi bi-star-fill me-2 star"></i>${data.vote_average.toFixed(1)}</p>
+                <h1 class="ms-auto">${mediaType}</h1>
+            </div>
+        </div>
+    </div>`);
+    // w220_and_h330_face
+    // $('.featured-poster-up-next').html(poster + `<div class="featured-poster-up-next-content">
+    //         <img src="${BASE_URL_IMG_W500}${data.poster_path}" class="" alt="${data.title || data.name}">
+    //         <div>
+    //             <h3>${data.title || data.name}</h3>
+    //             <p>Rating: ${data.vote_average}</p>
+    //         </div>
+    //     </div>`);
+}
+function setUpNext(data) {
+    const poster = $('.featured-poster-up-next').html();
+    $('.featured-poster-up-next').html(poster + `<div class="featured-poster-up-next-content">
+            <img src="${BASE_URL_IMG_W500}${data.poster_path}" class="" alt="${data.title || data.name}">
+            <div>
+                <h5>${data.title || data.name}</h5>
+                <p><i class="bi bi-star-fill me-2 star"></i>${data.vote_average.toFixed(1)}</p>
+            </div>
+        </div>`);
+}
+
+// TODO: 
+function setSlider(data, element) {
+    const fetchSlider = element.html();
+    const fetchIndicator = element.html();
+    // element.html(fetchSlider + `<div class="slider-item" data-details="{'id':${data.id}, 'title': '${data.title || data.name}', 'release_date': '${data.release_date}', 'poster_path': '${data.poster_path}', 'rating': ${data.vote_average}}">
+    // element.html(fetchSlider + `<div class="slider-item" data-details="[ '${data.id}', '${data.title || data.name}', '${data.release_date}', '${data.poster_path}', '${data.vote_average}' ]">
+    // const title = JSON.stringify(data.title || data.name);
+    // const overview = JSON.stringify(`${data.overview}`);
+    // console.log(escape(data.overview));
+    // console.log(title, overview);
+    // element.html(fetchSlider + `<div class="slider-item" data-details="{\"id\": \"${data.id}\",\"title\": \"${data.title}\",\"release_date\": \"${data.release_date}\",\"poster_path\": \"${data.poster_path}\",\"rating\": \"${data.vote_average}\",\"overview\": \"${data.overview}\"}">
+    // const overview = JSON.stringify(data.overview.replace("'","\'"));
+    const strData = JSON.stringify(data, function (key, value) {
+        if (key == 'overview') {
+            return value.replace(/'/g, "’");
+        } else {
+            return value;
+        }
+    });
+    // console.log('ESCAPED ', overview);
+    // console.log(jQuery.parseJSON(overview));
+    // element.html(fetchSlider + `<div class="slider-item" data-details='{"id": "${data.id}","title": ${data.title},"release_date": "${data.release_date}","poster_path": "${data.poster_path}","rating": "${data.vote_average}","overview": "${overview}"}'>
+    element.html(fetchSlider + `<div class="slider-item" data-details='${strData}'>
+        <img src="${BASE_URL_IMG_W500}${data.poster_path}" alt="${data.title || data.name}">
+        <div class="slider-item-details">
+            <h6>${data.title || data.name}</h6>
+            <p><i class="bi bi-star-fill me-2 star"></i>${data.vote_average}</p>
+        </div>
+    </div>`);
+}
+
+function setCast(data, element) {
+    const fetch = element.html();
+    const releaseDate = data.release_date;
+
+    let genres = [];
+    data.genres.forEach(obj => {
+        genres.push(obj.name);
+    });
+
+    
+    // console.log(data.production_companies);
+
+    let logoCount = 0,
+        companyName = [];
+    productionCompanies = '<div class="company-logo">';
+
+    data.production_companies.forEach(obj => {
+        companyName.push(obj.name);
+        if (obj.logo_path !== null) {
+            productionCompanies += `<img src="${BASE_URL_IMG_W500}${obj.logo_path}" alt="${obj.name}">`;
+            logoCount++;
+        }
+    });
+    productionCompanies += '</div>';
+
+    if (logoCount === 0) {
+        productionCompanies = '';
+    }
+
+    // console.log(data);
+
+    // console.log(data.trailer);
+    // console.log(data.providers);
+    // xgZLXyqbYOc
+    // <iframe class="trailer" src="https://www.youtube.com/embed/${data.trailer.key}"></iframe>
+
+    // const releaseDate = new Date(data.release_date);
+    // console.log(data);
+    // console.log($('.details').innerHeight());
+    // console.log($('.details-right').outerHeight());
+    // console.log($('.details-content').outerHeight());
+    // $('.show-details').css('height', $('.show-details').innerHeight());
+    element.parent().css('background', `url(https://image.tmdb.org/t/p/w1920_and_h800_multi_faces${data.backdrop_path}) no-repeat 50% 50%`);
+    // element.parent().css('background', `url(${BASE_URL_IMG_ORIGINAL}${data.backdrop_path}) no-repeat 50% 50%`);
+    // element.html(`<img src="${BASE_URL_IMG_W500}${data.poster_path}" alt="" id="movieDetailsPoster">
+    element.html(`<div class="details-right">
+        <div class="close-details">
+            <button type="button" class="btn btn-lg ms-auto text-white" id="closeDetails">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+        <div class="nav-slider mb-3" id="details-nav-slider">
+            <button type="button" class="nav-slider-btn" data-index="0">Details</button>
+            <button type="button" class="nav-slider-btn" data-index="1">Casts</button>
+            <button type="button" class="nav-slider-btn" data-index="2">Trailer</button>
+            <span class="nav-slider-slider"></span>
+        </div>
+        <div class="details-detail">
+            <img class="detail-poster" src="${BASE_URL_IMG_W500}${data.poster_path}" alt="" id="movieDetailsPoster">
+            <div style="padding:10px; vertical-align:center; display:flex; flex-direction: column;">
+                <h3>${data.title || data.name}</h3>
+                <p class="rating">
+                    <i class="bi bi-star-fill me-2 star"></i>
+                    <span class="me-2">${data.vote_average.toFixed(1)} / 10</span> |
+                    <span class="ms-2 me-2">${data.release_date || data.first_air_date}</span> |
+                    <span class="ms-2 me-2">${genres.join(', ')}</span>
+                </p>
+                <p class="overview">${data.overview}</p>
+                <p>Director: ${data.director}</p>
+                <p class="production-company">Production Companies: ${companyName.join(", ")}
+                ${productionCompanies}
+            </div>
+        </div>
+        <div class="details-cast hidden">
+            <div class="media-slider">
+                <button type="button" class="btn btn-lg btn-dark slider-btn-left hidden" id="slider-cast-btn-left"
+                    data-target="#sliderCast">
+                    <div class="chevron"><i class="bi bi-chevron-left"></i></div>
+                </button>
+                <button type="button" class="btn btn-lg btn-dark slider-btn-right" id="slider-cast-btn-right"
+                    data-target="#sliderCast">
+                    <div class="chevron"><i class="bi bi-chevron-right "></i></div>
+                </button>
+                <div class="slider snaps-inline" id="sliderCast"></div>
+            </div>
+        </div>
+        <div class="details-trailer hidden">
+            <div class="trailer-container hidden">
+                <iframe class="trailer" src="https://www.youtube.com/embed/${data.trailer.key}" style="aspect-ratio: 1.85/1"></iframe>
+            </div>
+        </div>
+    </div>`);
+}
+
+function setSliderCast(data, element) {
+    // console.log(data);
+
+    const fetch = element.html();
+    let profile, character;
+    if (data.profile_path) {
+        profile = BASE_URL_IMG_W500 + data.profile_path;
+    } else {
+        if (data.gender === 1) {
+            profile = 'img/blank-profile-female.jpg';
+        } else {
+            profile = 'img/blank-profile-male.jpg';
+        }
+    }
+    if (data.type === 'movie') {
+        character = data.character;
+    } else {
+        character = data.roles[0].character;
+    }
+    element.html(fetch + `<div class="slider-item">
+        <div class="img-cast">
+            <img src="${profile}" alt="${data.title || data.name}">
+        </div>
+        <h5>${data.name}</h5>
+        <p>${character}</p>
+    </div>`);
+}
+
+// Set first width of nav slider slider
+function setNavSliderWidth(parentElement) {
+    const firstNavWidth = $(`${parentElement} .nav-slider-slider`).siblings().first().innerWidth();
+    $(`${parentElement} .nav-slider-slider`).css('width', firstNavWidth);
+}
