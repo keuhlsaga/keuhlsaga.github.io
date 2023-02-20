@@ -805,20 +805,21 @@ function setCarousel(data, i) {
     }
     $('.carousel-inner').html(carousel + `<div class="carousel-item ${is_active}">
         <img src="${BASE_URL_IMG_ORIGINAL}${data.backdrop_path}" class="d-block w-100 carousel-img" alt="...">
-        <div class="carousel-caption d-none d-md-block flex-grow-0">
-            <div class="d-flex">
-            
-                <h3>${data.title || data.name}</h3>
+        <a class="carousel-link" href="#">
+            <div class="carousel-caption d-none d-md-block flex-grow-0">
+                <div class="d-flex">
+                    <i class="bi bi-play-circle-fill ms-2 play"></i>
+                    <div class="d-flex flex-column ps-2 justify-content-center">
+                        <h3>${data.title || data.name}</h3>
+                        <p>
+                            <i class="bi bi-star-fill star"></i>
+                            ${data.vote_average.toFixed(1)}
+                        </p>
+                    </div>
+                    <h1 class="ms-auto">${mediaType}</h1>
+                </div>
             </div>
-            <div class="d-flex">
-                <p><i class="bi bi-star-fill me-2 star"></i>${data.vote_average.toFixed(1)}</p>
-                
-                <a class="carousel-link flex-grow-0" href="" id="play">
-                <i class="bi bi-play-circle-fill ms-2 play"></i>
-                </a>
-                <h1 class="ms-auto">${mediaType}</h1>
-            </div>
-        </div>
+        </a>
     </div>`);
     // w220_and_h330_face
     // $('.featured-poster-up-next').html(poster + `<div class="featured-poster-up-next-content">
@@ -832,13 +833,15 @@ function setCarousel(data, i) {
 function setUpNext(data) {
     const poster = $('.featured-poster-up-next').html();
     $('.featured-poster-up-next').html(poster + `<div class="featured-poster-up-next-content">
-            <img src="${BASE_URL_IMG_W500}${data.poster_path}" class="" alt="${data.title || data.name}">
-            <div>
-                <h5>${data.title || data.name}</h5>
-                <p><i class="bi bi-star-fill me-2 star"></i>${data.vote_average.toFixed(1)}</p>
-                <i class="bi bi-play-circle-fill ms-2 play"></i>
+        <img src="${BASE_URL_IMG_W500}${data.poster_path}" class="" alt="${data.title || data.name}">
+        <a class="#" href="">
+            <div class="up-next-caption">
+            <h5>${data.title || data.name}</h5>
+            <p><i class="bi bi-star-fill me-2 star"></i>${data.vote_average.toFixed(1)}</p>
+            <i class="bi bi-play-circle-fill ms-2 play"></i>
             </div>
-        </div>`);
+        </a>
+    </div>`);
 }
 
 // TODO: 
