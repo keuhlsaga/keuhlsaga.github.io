@@ -2,26 +2,30 @@ const API_KEY = 'NssCU4xKharIlFgih+IHXA==D8tanMmOq4QitkWr';
 const ALPHABET = 'abcdefghijklmnopqrstuvwxyz';
 const WORD_GROUPS = 3;
 const WORDS_PER_WAVE = 5;
-let monitor = null;
-let wordObjects = [];
+const MISSILE_SPEED = 350;
+let nthChild = null;
+let wordIndex = null;
+let gameProgress = null;
 let gameStarted = false;
 let firstStart = false;
+let firstLetterFound = false;
+let isGameOver = false;
+let wordObjects = [];
 let wordsArray = [];
 let wordGroups = [];
 let firstLetterArray = [];
 let firstLetterGroups = [];
-let nthChild = null;
-let firstLetterFound = false;
-let matchWord = '';
+let streaks = [];
+let firstLetterHistory = [];
+let matchWord = null;
 let typedLetter = '';
 let visibleWords = WORDS_PER_WAVE;
 let waveCount = 1;
 let correct = 0;
 let streak = 0;
-let streaks = [];
 let allTypedCount = 0;
 let loadingInterval = 0;
-let isGameOver = false;
+let first, second, third, fourth, fifth;
 
 class Word {
     constructor(text = null) {
@@ -31,6 +35,7 @@ class Word {
         this._speed = Math.floor(Math.random() * 10000 + 10000 + this._text.length * 1000);
         this._x = null;
         this._y = null;
+        this._move = null;
     }
 
     render(text) {
@@ -57,51 +62,44 @@ class Word {
     move() {
         const character = document.querySelector('.character');
         this._element.classList.remove('hidden');
-        // this._element.style.display = 'block';
         this._element.style.left = `${this._x}px`;
         this._element.style.top = `${this._y}px`;
 
-        let targetX = 0;
-        if (this._element.offsetLeft < 100) {
-            targetX = 100 - this._element.offsetWidth / 2;
-        } else {
-            targetX = this._element.offsetWidth / 2 - 100;
-        }
         const wordMoving = [
             { left: `${character.offsetLeft - 25}px`, top: `${character.offsetTop}px` }
         ];
         const time = {
             duration: this._speed,
+            delay: 200,
             iterations: 1
         }
-        this._element.classList.remove('hidden');
-        this._element.animate(wordMoving, time);
+        this._move = this._element.animate(wordMoving, time);
     }
 
-    targetHit() {
+    collision() {
         const character = document.querySelector('.character');
-        let targetY = character.offsetTop - 55;
-        console.log(this._text, this._element.offsetTop, targetY);
+        let targetY = character.offsetTop;
         if (this._element.offsetTop >= targetY && !this._element.style.opacity) {
             return true;
         }
         return false;
     }
 
-    length() {
-        return this._text.length;
-    }
-
-    update(text) {
-        this._text = text;
-        this.render();
+    hit() {
+        setTimeout(() => {
+            this._move.pause();
+            setTimeout(() => {
+                this._move.play()
+            }, 250);
+        }, MISSILE_SPEED);
     }
 }
 
 class Typewriter {
     constructor(element, text, speed) {
         this._element = element;
-        this._text = '\u00A0' + text;
+        // this._text = '\u00A0' + text;
+        this._text = text;
         this._speed = speed;
         this._interval = null;
     }
@@ -129,7 +127,6 @@ class Typewriter {
                     } else {
                         clearInterval(this._interval);
                         if (hidden) {
-                            // this._element.style.borderRightColor = 'transparent';
                             this._element.style.setProperty('--blinkingCursor-speed', '0s');
                         }
                     }
@@ -138,31 +135,6 @@ class Typewriter {
         }
         return reverse;
     }
-
-    /* reverse(loop = false) {
-        this.clear();
-        if (!this._interval) {
-            this._element.style.display = 'block';
-            this._element.innerHTML = this._text;
-            let i = this._text.length - 1;
-            this._interval = setInterval(() => {
-                if (i >= 0) {
-                    this._element.innerHTML = this._text.slice(0, i);
-                    i--;
-                } else {
-                    if (loop) {
-                        this._element.innerHTML = this._text;
-                        i = this._text.length - 1;
-                    } else {
-                        clearInterval(this._interval);
-                        if (hidden) {
-                            this._element.style.borderColor = 'transparent';
-                        }
-                    }
-                }
-            }, this._speed);
-        }
-    } */
 
     clear() {
         clearInterval(this._interval);
@@ -181,10 +153,8 @@ class Typewriter {
     }
 }
 
-let first, second, third, fourth, fifth;
 
 window.addEventListener('load', (e) => {
-    // const SHOW_TYPED_TEXT = document.querySelector('#showTypedText');
     const title = document.querySelector('#title');
     const field = document.querySelector('.words');
     const startBtn = document.querySelector('#startBtn');
@@ -251,11 +221,6 @@ window.addEventListener('load', (e) => {
                 }, intervalSpeed * subTitleTW.length() + 250);
             }, intervalSpeed * titleTW.length() + 250);
 
-            // first = new Word();
-            // second = new Word();
-            // third = new Word();
-            // fourth = new Word();
-            // fifth = new Word();
             first = new Word(wordGroups[0][0]);
             second = new Word(wordGroups[0][1]);
             third = new Word(wordGroups[0][2]);
@@ -269,12 +234,15 @@ window.addEventListener('load', (e) => {
         }
     };
 
-    let firstLetterHistory = [];
     window.addEventListener('keydown', (e) => {
+        const mobileInput = document.querySelector('#mobileInput');
+        mobileInput.value = '';
+        mobileInput.focus();
+        console.log(mobileInput.value);
         if (gameStarted) {
             if (ALPHABET.includes(e.key.toLowerCase())) {
                 if (!firstLetterFound) {
-                    let wordIndex = firstLetterGroups[0].indexOf(e.key);
+                    wordIndex = firstLetterGroups[0].indexOf(e.key);
                     if (wordIndex >= 0 && !firstLetterHistory.includes(e.key)) {
                         firstLetterHistory.push(firstLetterGroups[0][wordIndex]);
                         firstLetterFound = true;
@@ -295,7 +263,7 @@ window.addEventListener('load', (e) => {
                     if (typedLetter === matchWord) {
                         firstLetterArray.splice(firstLetterArray.indexOf(matchWord[0]), 1);
                         wordsArray.splice(wordsArray.indexOf(matchWord), 1);
-                        matchWord = '';
+                        matchWord = null;
                         typedLetter = '';
                         firstLetterFound = false;
                         visibleWords--;
@@ -306,7 +274,7 @@ window.addEventListener('load', (e) => {
                         }, 501);
                     }
                     if (visibleWords === 0) {
-                        clearInterval(monitor);
+                        clearInterval(gameProgress);
                         waveCount++;
                         waveCleared.classList.toggle('show-wave');
                         gameStarted = false;
@@ -359,7 +327,7 @@ window.addEventListener('load', (e) => {
         firstLetterGroups.shift();
         firstLetterHistory = [];
         firstLetterFound = false;
-        matchWord = '';
+        matchWord = null;
         typedLetter = '';
         visibleWords = WORDS_PER_WAVE;
         waveCount = 1;
@@ -368,6 +336,7 @@ window.addEventListener('load', (e) => {
         streaks = [];
         allTypedCount = 0;
         nthChild = null;
+        wordIndex = null;
         title.classList.toggle('hidden');
         titleTW.start(false, true);
         setTimeout(() => {
@@ -383,11 +352,27 @@ window.addEventListener('load', (e) => {
 
 });
 
+function hit(nthWord) {
+    if (nthWord === 0) {
+        first.hit();
+    } else if (nthWord === 1) {
+        second.hit();
+    } else if (nthWord === 2) {
+        third.hit();
+    } else if (nthWord === 3) {
+        fourth.hit();
+    } else if (nthWord === 4) {
+        fifth.hit();
+    }
+}
+
 function startGame() {
     const waveBoard = document.querySelector('#wave');
+    const mobileInput = document.querySelector('#mobileInput');
+    mobileInput.focus();
+    console.log(mobileInput.value);
     waveBoard.innerText = waveCount;
     if (isGameOver) {
-        console.log('after game over');
         first.render(wordGroups[0][0]);
         second.render(wordGroups[0][1]);
         third.render(wordGroups[0][2]);
@@ -396,19 +381,15 @@ function startGame() {
         console.log(first, second, third, fourth, fifth);
         isGameOver = false;
     }
-    setTimeout(() => {
-        gameStarted = true;
-        first.move();
-        second.move();
-        third.move();
-        fourth.move();
-        fifth.move();
-    }, 200);
-    monitor = setInterval(() => {
-        console.log('monitor');
-        if (first.targetHit() || second.targetHit() || third.targetHit() || fourth.targetHit() || fifth.targetHit()) {
-            console.log('sulod ka diri');
-            clearInterval(monitor);
+    gameStarted = true;
+    first.move();
+    second.move();
+    third.move();
+    fourth.move();
+    fifth.move();
+    gameProgress = setInterval(() => {
+        if (first.collision() || second.collision() || third.collision() || fourth.collision() || fifth.collision()) {
+            clearInterval(gameProgress);
             gameOver();
         }
     }, 250);
@@ -424,8 +405,7 @@ function updateGame(key = null) {
         streak++;
         allTypedCount++;
         setStats();
-
-        console.log(typedLetter, nthChild, correct, streak, allTypedCount);
+        hit(wordIndex);
     } else {
         if (streak !== 0) {
             streaks.push(streak);
@@ -444,45 +424,22 @@ function shootMisile(target) {
     span.classList.add('shoot-misile');
     character.before(span);
 
-    let left = target.offsetLeft + target.offsetWidth / 2;
+    let left = target.offsetLeft + target.offsetWidth / 2 - fieldWidth / 2;
     let top = target.offsetTop - fieldHeight + 100;
-    let rotate = 0;
-    left -= fieldWidth / 2;
-    rotate = ((target.offsetLeft - fieldWidth / 2)) / 10;
+    let rotate = left / 9;
 
-    // console.log('start-target', target.offsetWidth);
-    // console.log('start-target', target.offsetLeft);
-    // console.log('start-target-top', target.offsetTop);
-    // console.log('middle-target', left);
-    // console.log('field-middle-target', fieldWidth / 2);
-    /* if (target.offsetLeft < fieldWidth/2) {
-        rotate = (target.offsetLeft - fieldWidth / 2) / 5;
-        console.log('less ', fieldWidth/2 - left);
-    } else {
-        rotate = target.offsetLeft - fieldWidth / 2;
-        console.log('more ', left - fieldWidth/2);
-    } */
-    // console.log('field center', fieldWidth / 2);
-    // console.log('rotate', target);
-
-    // console.log('left', left);
-    // console.log('top', top);
-
-    // console.log('go', left);
-
-    // console.log('rotation ', rotate, 'deg');
     const wordMoving = [
         { transform: `translate(0px, 0px)` },
         { transform: `translate(${left}px, ${top}px)` }
     ]
     const time = {
-        duration: 350,
+        duration: MISSILE_SPEED,
         iterations: 1
     }
     const misiles = document.querySelectorAll('.shoot-misile');
     character.style.transform = `rotate(${rotate}deg)`;
-    // misiles[misiles.length - 1].style.transform = `rotate(${rotate}deg)`;
     misiles[misiles.length - 1].animate(wordMoving, time);
+    misiles[misiles.length - 1].style.transform = `rotate(${rotate}deg)`;
 }
 
 function setStats() {
