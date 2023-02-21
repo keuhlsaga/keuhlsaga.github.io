@@ -64,11 +64,9 @@ body {
     top: -1px;
     text-align: center;
     background: rgba(0, 0, 0, 0.5);
-    /* background: white; */
     letter-spacing: 5px;
     opacity: 1;
     transition: all 1s ease;
-    /* z-index: -2; */
 }
 
 .text {
@@ -84,6 +82,8 @@ body {
     position: relative;
     left: 50%;
     top: 20%;
+    text-align: center;
+    border-left: 1px solid transparent;
     cursor: default;
     transform: translateX(-50%);
 }
@@ -98,26 +98,17 @@ body {
     position: absolute;
     left: 50%;
     top: 105%;
-    /* width: 0;
-    height: 0;
-    border-left: 15px solid transparent;
-    border-right: 15px solid transparent;
-    border-bottom: 30px solid rgb(0, 255, 0); */
     z-index: 2;
     width: 40px;
     height: 40px;
     margin-left: -20px;
     opacity: 1;
-    background: url('img/pngtree-bomber-fighter-illustration-png-image_4095734.png') no-repeat 0 0;
-    mix-blend-mode: multiply;
-    /* filter: drop-shadow(100%); */
-    /* filter: invert(97%) sepia(100%) saturate(0%) hue-rotate(25deg) brightness(102%) contrast(107%); */
-    /* background: url('img/5803-feature-7.jpg') no-repeat 0 0; */
+    background: url('img/star-wars-millennium-falcon-logo-8CB684CFBE-seeklogo.com.png') no-repeat 0 0;
     background-size: contain;
     transition: all .5s ease-in-out !important;
 }
 
-.shoot-misile {
+.missile {
     position: absolute;
     left: 50%;
     bottom: 40px;
@@ -126,8 +117,9 @@ body {
     height: 15px;
     border-top-right-radius: 5px;
     border-top-left-radius: 5px;
-    background: red;
+    background: linear-gradient(orange, rgb(255, 102, 0), red);
     transform: translateX(-50%);
+    opacity: 0;
 }
 
 /* Typewriter effect animation */
@@ -144,6 +136,7 @@ body {
     top: 50%;
     width: fit-content;
     letter-spacing: 5px;
+    margin-left: calc(.5 * 5px);
     border-right: 2px solid transparent;
     transform: translate(-50%, -50%);
     animation: blinkingCursor var(--blinkingCursor-speed) infinite;
@@ -151,7 +144,7 @@ body {
 
 @keyframes blinkingCursor {
     50% {
-        border-color: white;
+        border-right-color: white;
     }
 }
 
@@ -224,9 +217,6 @@ body {
 }
 
 .show-wave {
-    /* display: block; */
-    /* animation: waveCleared 1s ease; */
-    /* transform: translate(-50%, -100%) !important; */
     top: 50%;
     z-index: 2;
     opacity: 1;
@@ -327,8 +317,6 @@ body {
 
 /* Mobile keyboard */
 .mobile-keyboard {
-    /* position: relative; */
-    /* bottom: 100px; */
     width: 100%;
     padding: 5px 0;
     background: rgba(0, 0, 0, 0.7);
@@ -400,7 +388,11 @@ body {
     }
 
     .slide-down {
-        top: 68% !important;
+        top: 67% !important;
+    }
+
+    .missile {
+        bottom: 155px !important;
     }
 }
 
@@ -423,17 +415,11 @@ body {
 }
 
 @media (min-width: 501px) {
-    .shoot-misile {
-        bottom: 40px !important;
-    }
-}
-
-@media (min-width: 320px) {
     .slide-down {
-        top: 64% !important;
+        top: 90% !important;
     }
 
-    .shoot-misile {
-        bottom: 155px !important;
+    .missile {
+        bottom: 40px !important;
     }
 }

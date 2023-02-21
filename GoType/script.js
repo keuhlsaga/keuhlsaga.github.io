@@ -3,6 +3,7 @@ const ALPHABET = 'abcdefghijklmnopqrstuvwxyz';
 const WORD_GROUPS = 3;
 const WORDS_PER_WAVE = 5;
 const MISSILE_SPEED = 350;
+let mobile = false;
 let nthChild = null;
 let wordIndex = null;
 let gameProgress = null;
@@ -66,7 +67,7 @@ class Word {
         this._element.style.top = `${this._y}px`;
 
         const wordMoving = [
-            { left: `${character.offsetLeft - 25}px`, top: `${character.offsetTop}px` }
+            { left: `${character.offsetLeft - 10}px`, top: `${character.offsetTop + 10}px` }
         ];
         const time = {
             duration: this._speed,
@@ -78,7 +79,7 @@ class Word {
 
     collision() {
         const character = document.querySelector('.character');
-        let targetY = character.offsetTop;
+        let targetY = character.offsetTop + 10;
         if (this._element.offsetTop >= targetY && !this._element.style.opacity) {
             return true;
         }
@@ -98,14 +99,16 @@ class Word {
 class Typewriter {
     constructor(element, text, speed) {
         this._element = element;
-        // this._text = '\u00A0' + text;
         this._text = text;
         this._speed = speed;
         this._interval = null;
     }
 
     start(loop = true, hidden = false, reverse = false) {
-        this.clear();
+        if (this._interval) {
+            clearInterval(this._interval);
+            this._interval = null;
+        }
         if (!this._interval) {
             this._element.style.display = 'block';
             let i = 0;
@@ -136,11 +139,6 @@ class Typewriter {
         return reverse;
     }
 
-    clear() {
-        clearInterval(this._interval);
-        this._interval = null;
-    }
-
     stop() {
         clearInterval(this._interval);
         this._interval = null;
@@ -162,7 +160,7 @@ window.addEventListener('load', (e) => {
     const waveCleared = document.querySelector('.wave');
     const loadingSection = document.querySelector('#loading');
     const typeWriterLoading = document.querySelector("#typeWriterLoading");
-    const intervalSpeed = 150;
+    const intervalSpeed = 150;    
     const loading = new Typewriter(typeWriterLoading, 'LOADING', intervalSpeed);
     const titleTW = new Typewriter(
         document.querySelector('.text>h1'),
@@ -174,33 +172,28 @@ window.addEventListener('load', (e) => {
         'Type to shoot',
         intervalSpeed
     );
-
-    // if (UA )
-
     loading.start();
 
     renderWords();
-    async function renderWords(j = 0) {
+    async function renderWords() {
         let isComplete = false;
-        console.log(wordsArray.length, wordGroups.length);
+
         if (!isComplete && wordsArray.length < WORDS_PER_WAVE && wordGroups.length < WORD_GROUPS) {
             await fetchRandomWord()
                 .then((response) => {
-                    console.log(response);
                     let word = response.word.toLowerCase();
-                    console.log(word);
                     if (!firstLetterArray.includes(word.charAt(0))) {
                         wordsArray.push(word);
                         firstLetterArray.push(word.charAt(0));
-                        console.log(wordsArray, firstLetterArray);
+
                         if (wordsArray.length === WORDS_PER_WAVE) {
                             firstLetterGroups.push(firstLetterArray);
                             wordGroups.push(wordsArray);
-                            console.log(wordGroups, firstLetterGroups);
                             firstLetterArray = [];
                             wordsArray = [];
                         }
                     }
+
                     if (wordGroups.length === WORD_GROUPS) {
                         isComplete = true;
                     } else {
@@ -208,6 +201,7 @@ window.addEventListener('load', (e) => {
                     }
                 });
         }
+
         if (isComplete == true && !firstStart) {
             firstStart = true;
             loading.stop();
@@ -277,7 +271,7 @@ window.addEventListener('load', (e) => {
                         const element = nthChild;
                         setTimeout(() => {
                             element.style.opacity = 0;
-                            document.querySelectorAll('.shoot-misile').forEach(misile => misile.remove());
+                            document.querySelectorAll('.missile').forEach(missile => missile.remove());
                         }, 501);
                     }
                     if (visibleWords === 0) {
@@ -289,14 +283,14 @@ window.addEventListener('load', (e) => {
                         wordGroups.shift();
                         firstLetterGroups.shift();
                         firstLetterHistory = [];
-                        field.innerHTML = '';
-                        first.render(wordGroups[0][0]);
-                        second.render(wordGroups[0][1]);
-                        third.render(wordGroups[0][2]);
-                        fourth.render(wordGroups[0][3]);
-                        fifth.render(wordGroups[0][4]);
-                        console.log(first);
+
                         setTimeout(() => {
+                            field.innerHTML = '';
+                            first.render(wordGroups[0][0]);
+                            second.render(wordGroups[0][1]);
+                            third.render(wordGroups[0][2]);
+                            fourth.render(wordGroups[0][3]);
+                            fifth.render(wordGroups[0][4]);
                             startGame();
                             visibleWords = WORDS_PER_WAVE;
                             setWaveClearedPanel();
@@ -308,7 +302,6 @@ window.addEventListener('load', (e) => {
     }
 
     startBtn.addEventListener('click', (e) => {
-        const title = document.querySelector('#title');
         startBtn.classList.toggle('hidden');
         subTitleTW.start(false, false, true);
         setTimeout(() => {
@@ -318,7 +311,6 @@ window.addEventListener('load', (e) => {
                 header.classList.toggle('slide-up');
                 character.classList.toggle('slide-down');
                 toggleKeyboard();
-                // character.classList.toggle('hidden');
                 startGame();
             }, intervalSpeed * titleTW.length() + 250);
         }, intervalSpeed * subTitleTW.length() + 250);
@@ -328,6 +320,7 @@ window.addEventListener('load', (e) => {
     newGameBtn.addEventListener('click', (e) => {
         const gameOverPanel = document.querySelector('#gameOver');
         gameOverPanel.classList.toggle('hidden');
+
         gameStarted = false;
         wordsArray = [];
         wordGroups.shift();
@@ -345,6 +338,7 @@ window.addEventListener('load', (e) => {
         allTypedCount = 0;
         nthChild = null;
         wordIndex = null;
+
         title.classList.toggle('hidden');
         titleTW.start(false, true);
         setTimeout(() => {
@@ -353,6 +347,7 @@ window.addEventListener('load', (e) => {
                 startBtn.classList.toggle('hidden');
             }, intervalSpeed * subTitleTW.length());
         }, intervalSpeed * titleTW.length());
+
         if (wordGroups.length === 1) {
             renderWords();
         }
@@ -364,6 +359,7 @@ function toggleKeyboard() {
     if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
         const keyboard = document.querySelector('.mobile-keyboard');
         keyboard.classList.toggle('show-keyboard');
+        mobile = true;
     }
 }
 
@@ -383,22 +379,27 @@ function hit(nthWord) {
 
 function startGame() {
     const waveBoard = document.querySelector('#wave');
+    const launcher = document.querySelector('.missiles');
+
     waveBoard.innerText = waveCount;
+    launcher.innerHTML = '';
+
     if (isGameOver) {
         first.render(wordGroups[0][0]);
         second.render(wordGroups[0][1]);
         third.render(wordGroups[0][2]);
         fourth.render(wordGroups[0][3]);
         fifth.render(wordGroups[0][4]);
-        console.log(first, second, third, fourth, fifth);
         isGameOver = false;
     }
+
     gameStarted = true;
     first.move();
     second.move();
     third.move();
     fourth.move();
     fifth.move();
+
     gameProgress = setInterval(() => {
         if (first.collision() || second.collision() || third.collision() || fourth.collision() || fifth.collision()) {
             clearInterval(gameProgress);
@@ -410,53 +411,60 @@ function startGame() {
 function updateGame(key = null) {
     if (key) {
         typedLetter += key;
-        console.log(typedLetter);
         nthChild.children[typedLetter.length - 1].classList.add('is-hit');
-        shootMisile(nthChild);
         correct++;
         streak++;
         allTypedCount++;
-        setStats();
+
+        shootMissiles(nthChild);
         hit(wordIndex);
+        setStats();
     } else {
         if (streak !== 0) {
             streaks.push(streak);
         }
+
         streak = 0;
         allTypedCount++;
         setStats();
     }
 }
 
-function shootMisile(target) {
+function shootMissiles(target) {
     const character = document.querySelector('.character');
     const fieldWidth = document.querySelector('.words').offsetWidth;
     const fieldHeight = document.querySelector('.words').offsetHeight;
-    let span = document.createElement('span');
-    span.classList.add('shoot-misile');
-    character.before(span);
+    const launcher = document.querySelector('.missiles');
+
+    let spanMissile = document.createElement('span');
+    spanMissile.classList.add('missile');
+    launcher.appendChild(spanMissile);
 
     let left = target.offsetLeft + target.offsetWidth / 2 - fieldWidth / 2;
-    let top = target.offsetTop - fieldHeight + 100;
-    let rotate = left / 9;
+    let top = target.offsetTop - fieldHeight + 50;
+    let rotate = left / 8.5;
+    
+    character.style.transform = `rotate(${rotate}deg)`;
+    launcher.lastChild.style.transform = `rotate(${rotate}deg)`;
+
+    if (mobile) {
+        top += 120;
+    }
 
     const wordMoving = [
-        { transform: `translate(0px, 0px)` },
-        { transform: `translate(${left}px, ${top}px)` }
+        { transform: `translate(${left}px, ${top}px)`, opacity: 1}
     ]
     const time = {
         duration: MISSILE_SPEED,
         iterations: 1
     }
-    const misiles = document.querySelectorAll('.shoot-misile');
-    character.style.transform = `rotate(${rotate}deg)`;
-    misiles[misiles.length - 1].animate(wordMoving, time);
-    misiles[misiles.length - 1].style.transform = `rotate(${rotate}deg)`;
+    launcher.lastChild.animate(wordMoving, time);
 }
 
 function setStats() {
     const streakBoard = document.querySelector('#streak');
     const scoreBoard = document.querySelector('#score');
+
     streakBoard.innerText = streak;
     scoreBoard.innerText = correct;
 }
@@ -464,6 +472,7 @@ function setStats() {
 function setWaveClearedPanel() {
     const waveCleared = document.querySelector('.wave');
     const waveNumber = document.querySelector('#waveCleared');
+
     waveCleared.classList.remove('show-wave');
     waveNumber.innerText = waveCount;
 }
@@ -477,29 +486,29 @@ function gameOver() {
     const gameOverPanel = document.querySelector('#gameOver');
     const header = document.querySelector('.header');
     const character = document.querySelector('.character');
-    const misiles = document.querySelectorAll('.shoot-misile');
-    let longest = Math.max(...streaks, streak);
-    isGameOver = true;
+    const launcher = document.querySelector('.missiles');
 
+    let longest = Math.max(...streaks, streak);
+
+    isGameOver = true;
     wave.innerText = waveCount - 1;
     longestStreak.innerText = longest;
     score.innerText = correct;
     accuracy.innerText = `${(correct / allTypedCount * 100 || 0).toFixed(2)}%`;
 
     toggleKeyboard();
+
     character.classList.toggle('slide-down');
     header.classList.toggle('slide-up');
     setTimeout(() => {
         gameOverPanel.classList.toggle('hidden');
     }, 500);
+
     field.innerHTML = '';
-    misiles.forEach(misile => {
-        misile.remove();
-    });
+    launcher.innerHTML = '';
 }
 
 async function fetchRandomWord() {
-    /* CORRECT USE THIS */
     const options = {
         method: 'GET',
         headers: { 'X-Api-Key': `${API_KEY}` }
