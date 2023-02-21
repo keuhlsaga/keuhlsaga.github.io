@@ -104,9 +104,9 @@ body {
     border-right: 15px solid transparent;
     border-bottom: 30px solid rgb(0, 255, 0); */
     z-index: 2;
-    width: 50px;
+    width: 40px;
     height: 40px;
-    margin-left: -15px;
+    margin-left: -20px;
     opacity: 1;
     background: url('img/pngtree-bomber-fighter-illustration-png-image_4095734.png') no-repeat 0 0;
     mix-blend-mode: multiply;
@@ -330,21 +330,16 @@ body {
     /* position: relative; */
     /* bottom: 100px; */
     width: 100%;
-    padding: 5px;
-    background: rgba(0, 0, 0, 0.5);
+    padding: 5px 0;
+    background: rgba(0, 0, 0, 0.7);
     z-index: w;
 }
 
 .keyboard-layer {
     display: flex;
-    gap: 5px;
-    height: 40px;
-    margin: 0 auto;
-    padding: 2.5px;
-}
-
-.keyboard-layer:nth-child(2) {
-    padding: auto;
+    gap: 3px;
+    height: 43px;
+    margin: 0 auto 5px auto;
 }
 
 .keyboard-btn {
@@ -352,14 +347,14 @@ body {
     height: 100%;
     font-size: 20px;
     color: #fff;
-    background: rgba(0, 0, 0, 1);
-    border:none;
+    background: #000;
+    border: none;
     border-radius: 5px;
 }
 
 .keyboard-btn:active {
     color: #000;
-    background: rgba(255, 255, 255, 0.5);
+    background: #fff;
 }
 
 .keyboard-layer:nth-child(1) .keyboard-btn:first-child,
@@ -367,11 +362,12 @@ body {
 .keyboard-layer:nth-child(3) .keyboard-btn:first-child {
     margin-left: auto;
 }
+
 .keyboard-layer:nth-child(1) .keyboard-btn:last-child,
 .keyboard-layer:nth-child(2) .keyboard-btn:last-child,
-.keyboard-layer:nth-child(3) .keyboard-btn:last-child  {
+.keyboard-layer:nth-child(3) .keyboard-btn:last-child {
     margin-right: auto;
-} 
+}
 
 /* Transition */
 .hidden {
@@ -387,7 +383,7 @@ body {
 }
 
 .show-keyboard {
-    transform: translateY(-130px);
+    transform: translateY(-146px);
 }
 
 @media (max-width: 500px) {
@@ -404,7 +400,7 @@ body {
     }
 
     .slide-down {
-        top: 69% !important;
+        top: 68% !important;
     }
 }
 
@@ -422,6 +418,22 @@ body {
 
 @media (max-width: 320px) {
     .keyboard-btn {
-        width: 25px !important;
+        width: 28px !important;
+    }
+}
+
+@media (min-width: 501px) {
+    .shoot-misile {
+        bottom: 40px !important;
+    }
+}
+
+@media (min-width: 320px) {
+    .slide-down {
+        top: 64% !important;
+    }
+
+    .shoot-misile {
+        bottom: 155px !important;
     }
 }
