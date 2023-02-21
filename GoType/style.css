@@ -16,7 +16,6 @@ body {
 .container {
     position: relative;
     left: 50%;
-    top: -1px;
     width: 500px;
     height: 100%;
     margin: 0;
@@ -110,7 +109,7 @@ body {
     margin-left: -15px;
     opacity: 1;
     background: url('img/pngtree-bomber-fighter-illustration-png-image_4095734.png') no-repeat 0 0;
-    /* mix-blend-mode: multiply; */
+    mix-blend-mode: multiply;
     /* filter: drop-shadow(100%); */
     /* filter: invert(97%) sepia(100%) saturate(0%) hue-rotate(25deg) brightness(102%) contrast(107%); */
     /* background: url('img/5803-feature-7.jpg') no-repeat 0 0; */
@@ -407,7 +406,21 @@ body {
     .slide-down {
         top: 69% !important;
     }
+}
 
+@media (max-width: 420px) {
+    .keyboard-btn {
+        width: 35px !important;
+    }
+}
+
+@media (max-width: 375px) {
+    .keyboard-btn {
+        width: 30px !important;
+    }
+}
+
+@media (max-width: 320px) {
     .keyboard-btn {
         width: 25px !important;
     }
