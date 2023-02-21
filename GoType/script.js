@@ -153,7 +153,6 @@ class Typewriter {
     }
 }
 
-
 window.addEventListener('load', (e) => {
     const title = document.querySelector('#title');
     const field = document.querySelector('.words');
@@ -164,7 +163,6 @@ window.addEventListener('load', (e) => {
     const loadingSection = document.querySelector('#loading');
     const typeWriterLoading = document.querySelector("#typeWriterLoading");
     const intervalSpeed = 150;
-
     const loading = new Typewriter(typeWriterLoading, 'LOADING', intervalSpeed);
     const titleTW = new Typewriter(
         document.querySelector('.text>h1'),
@@ -176,6 +174,9 @@ window.addEventListener('load', (e) => {
         'Type to shoot',
         intervalSpeed
     );
+
+    // if (UA )
+
     loading.start();
 
     renderWords();
@@ -235,28 +236,34 @@ window.addEventListener('load', (e) => {
     };
 
     window.addEventListener('keydown', (e) => {
-        const mobileInput = document.querySelector('#mobileInput');
-        mobileInput.value = '';
-        mobileInput.focus();
-        console.log(mobileInput.value);
+        validateKey(e.key);
+    });
+
+    window.addEventListener('click', (e) => {
+        if (e.target.closest('.keyboard-btn')) {
+            validateKey(e.target.closest('.keyboard-btn').value);
+        }
+    });
+
+    function validateKey(key) {
         if (gameStarted) {
-            if (ALPHABET.includes(e.key.toLowerCase())) {
+            if (ALPHABET.includes(key.toLowerCase())) {
                 if (!firstLetterFound) {
-                    wordIndex = firstLetterGroups[0].indexOf(e.key);
-                    if (wordIndex >= 0 && !firstLetterHistory.includes(e.key)) {
+                    wordIndex = firstLetterGroups[0].indexOf(key);
+                    if (wordIndex >= 0 && !firstLetterHistory.includes(key)) {
                         firstLetterHistory.push(firstLetterGroups[0][wordIndex]);
                         firstLetterFound = true;
                         matchWord = wordGroups[0][wordIndex];
                         nthChild = document.querySelector(`.word:nth-child(${wordIndex + 1})`);
                         nthChild.classList.toggle('damaged');
-                        updateGame(e.key);
+                        updateGame(key);
                     }
                     if (!firstLetterFound) {
                         updateGame();
                     }
                 } else {
-                    if (e.key === matchWord[typedLetter.length]) {
-                        updateGame(e.key);
+                    if (key === matchWord[typedLetter.length]) {
+                        updateGame(key);
                     } else {
                         updateGame();
                     }
@@ -298,7 +305,7 @@ window.addEventListener('load', (e) => {
                 }
             }
         }
-    });
+    }
 
     startBtn.addEventListener('click', (e) => {
         const title = document.querySelector('#title');
@@ -310,6 +317,7 @@ window.addEventListener('load', (e) => {
                 title.classList.toggle('hidden');
                 header.classList.toggle('slide-up');
                 character.classList.toggle('slide-down');
+                toggleKeyboard();
                 // character.classList.toggle('hidden');
                 startGame();
             }, intervalSpeed * titleTW.length() + 250);
@@ -352,6 +360,13 @@ window.addEventListener('load', (e) => {
 
 });
 
+function toggleKeyboard() {
+    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+        const keyboard = document.querySelector('.mobile-keyboard');
+        keyboard.classList.toggle('show-keyboard');
+    }
+}
+
 function hit(nthWord) {
     if (nthWord === 0) {
         first.hit();
@@ -368,9 +383,6 @@ function hit(nthWord) {
 
 function startGame() {
     const waveBoard = document.querySelector('#wave');
-    const mobileInput = document.querySelector('#mobileInput');
-    mobileInput.focus();
-    console.log(mobileInput.value);
     waveBoard.innerText = waveCount;
     if (isGameOver) {
         first.render(wordGroups[0][0]);
@@ -474,6 +486,7 @@ function gameOver() {
     score.innerText = correct;
     accuracy.innerText = `${(correct / allTypedCount * 100 || 0).toFixed(2)}%`;
 
+    toggleKeyboard();
     character.classList.toggle('slide-down');
     header.classList.toggle('slide-up');
     setTimeout(() => {
