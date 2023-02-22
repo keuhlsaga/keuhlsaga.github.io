@@ -97,15 +97,22 @@ body {
     --character-color: linear-gradient(red, white);
     position: absolute;
     left: 50%;
-    top: 105%;
+    top: 110%;
     z-index: 2;
-    width: 40px;
+    width: 31px;
     height: 40px;
-    margin-left: -20px;
+    margin-left: -15px;
     opacity: 1;
     background: url('img/star-wars-millennium-falcon-logo-8CB684CFBE-seeklogo.com.png') no-repeat 0 0;
     background-size: contain;
     transition: all .5s ease-in-out !important;
+    border-radius: 50%;
+    box-shadow: 0 0 0 0 red;
+}
+
+.collision {
+    box-shadow: 0 0 10px 70px transparent;
+    filter: invert(22%) sepia(55%) saturate(7421%) hue-rotate(356deg) brightness(87%) contrast(136%);
 }
 
 .missile {
@@ -192,6 +199,10 @@ body {
     color: red;
 }
 
+.damaged {
+    z-index: 2;
+}
+
 .damaged::before {
     animation: target .5s infinite;
 }
@@ -214,13 +225,14 @@ body {
     z-index: -2;
     opacity: 0;
     transform: translate(-50%, -50%);
+    transition: all .5s ease;
 }
 
 .show-wave {
     top: 50%;
     z-index: 2;
     opacity: 1;
-    transition: all 1s ease;
+    transition: all 1s ease !important;
 }
 
 @keyframes waveCleared {
@@ -394,6 +406,15 @@ body {
     .missile {
         bottom: 155px !important;
     }
+
+    .wave {
+        top: 50% !important;
+    }
+    
+    .show-wave {
+        top: 38% !important;
+    }
+    
 }
 
 @media (max-width: 420px) {

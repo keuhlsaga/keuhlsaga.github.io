@@ -3,6 +3,7 @@ const ALPHABET = 'abcdefghijklmnopqrstuvwxyz';
 const WORD_GROUPS = 3;
 const WORDS_PER_WAVE = 5;
 const MISSILE_SPEED = 350;
+const MOBILE_SPEED = 20 * 1000;
 let mobile = false;
 let nthChild = null;
 let wordIndex = null;
@@ -29,11 +30,11 @@ let loadingInterval = 0;
 let first, second, third, fourth, fifth;
 
 class Word {
-    constructor(text = null) {
+    constructor(text = '') {
         this._element = null;
         this._field = document.querySelector('.words');
         this._text = text;
-        this._speed = Math.floor(Math.random() * 10000 + 10000 + this._text.length * 1000);
+        this._speed = Math.floor(Math.random() * 10000 + 20000 + this._text.length * 1000);
         this._x = null;
         this._y = null;
         this._move = null;
@@ -93,6 +94,12 @@ class Word {
                 this._move.play()
             }, 250);
         }, MISSILE_SPEED);
+    }
+
+    mobile(speed) {
+        console.log(this._speed);
+        this._speed += speed;
+        console.log(speed, this._speed);
     }
 }
 
@@ -160,7 +167,7 @@ window.addEventListener('load', (e) => {
     const waveCleared = document.querySelector('.wave');
     const loadingSection = document.querySelector('#loading');
     const typeWriterLoading = document.querySelector("#typeWriterLoading");
-    const intervalSpeed = 150;    
+    const intervalSpeed = 150;
     const loading = new Typewriter(typeWriterLoading, 'LOADING', intervalSpeed);
     const titleTW = new Typewriter(
         document.querySelector('.text>h1'),
@@ -182,7 +189,7 @@ window.addEventListener('load', (e) => {
             await fetchRandomWord()
                 .then((response) => {
                     let word = response.word.toLowerCase();
-                    if (!firstLetterArray.includes(word.charAt(0))) {
+                    if (!firstLetterArray.includes(word.charAt(0)) && word.length <= 8) {
                         wordsArray.push(word);
                         firstLetterArray.push(word.charAt(0));
 
@@ -213,19 +220,14 @@ window.addEventListener('load', (e) => {
                 subTitleTW.start(false);
                 setTimeout(() => {
                     startBtn.classList.toggle('hidden');
-                }, intervalSpeed * subTitleTW.length() + 250);
-            }, intervalSpeed * titleTW.length() + 250);
+                }, intervalSpeed * subTitleTW.length() + 100);
+            }, intervalSpeed * titleTW.length() + 100);
 
-            first = new Word(wordGroups[0][0]);
-            second = new Word(wordGroups[0][1]);
-            third = new Word(wordGroups[0][2]);
-            fourth = new Word(wordGroups[0][3]);
-            fifth = new Word(wordGroups[0][4]);
-            first.render();
-            second.render();
-            third.render();
-            fourth.render();
-            fifth.render();
+            first = new Word();
+            second = new Word();
+            third = new Word();
+            fourth = new Word();
+            fifth = new Word();
         }
     };
 
@@ -277,6 +279,7 @@ window.addEventListener('load', (e) => {
                     if (visibleWords === 0) {
                         clearInterval(gameProgress);
                         waveCount++;
+                        document.querySelector('#waveCleared').innerText = waveCount;
                         waveCleared.classList.toggle('show-wave');
                         gameStarted = false;
                         renderWords();
@@ -286,14 +289,9 @@ window.addEventListener('load', (e) => {
 
                         setTimeout(() => {
                             field.innerHTML = '';
-                            first.render(wordGroups[0][0]);
-                            second.render(wordGroups[0][1]);
-                            third.render(wordGroups[0][2]);
-                            fourth.render(wordGroups[0][3]);
-                            fifth.render(wordGroups[0][4]);
+                            waveCleared.classList.toggle('show-wave');
                             startGame();
                             visibleWords = WORDS_PER_WAVE;
-                            setWaveClearedPanel();
                         }, 3000);
                     }
                 }
@@ -359,7 +357,14 @@ function toggleKeyboard() {
     if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
         const keyboard = document.querySelector('.mobile-keyboard');
         keyboard.classList.toggle('show-keyboard');
-        mobile = true;
+        if (!mobile) {
+            mobile = true;
+            first.mobile(MOBILE_SPEED);
+            second.mobile(MOBILE_SPEED);
+            third.mobile(MOBILE_SPEED);
+            fourth.mobile(MOBILE_SPEED);
+            fifth.mobile(MOBILE_SPEED);
+        }
     }
 }
 
@@ -384,12 +389,13 @@ function startGame() {
     waveBoard.innerText = waveCount;
     launcher.innerHTML = '';
 
+    first.render(wordGroups[0][0]);
+    second.render(wordGroups[0][1]);
+    third.render(wordGroups[0][2]);
+    fourth.render(wordGroups[0][3]);
+    fifth.render(wordGroups[0][4]);
+
     if (isGameOver) {
-        first.render(wordGroups[0][0]);
-        second.render(wordGroups[0][1]);
-        third.render(wordGroups[0][2]);
-        fourth.render(wordGroups[0][3]);
-        fifth.render(wordGroups[0][4]);
         isGameOver = false;
     }
 
@@ -423,7 +429,6 @@ function updateGame(key = null) {
         if (streak !== 0) {
             streaks.push(streak);
         }
-
         streak = 0;
         allTypedCount++;
         setStats();
@@ -443,7 +448,7 @@ function shootMissiles(target) {
     let left = target.offsetLeft + target.offsetWidth / 2 - fieldWidth / 2;
     let top = target.offsetTop - fieldHeight + 50;
     let rotate = left / 8.5;
-    
+
     character.style.transform = `rotate(${rotate}deg)`;
     launcher.lastChild.style.transform = `rotate(${rotate}deg)`;
 
@@ -452,7 +457,7 @@ function shootMissiles(target) {
     }
 
     const wordMoving = [
-        { transform: `translate(${left}px, ${top}px)`, opacity: 1}
+        { transform: `translate(${left}px, ${top}px)`, opacity: 1 }
     ]
     const time = {
         duration: MISSILE_SPEED,
@@ -498,11 +503,16 @@ function gameOver() {
 
     toggleKeyboard();
 
-    character.classList.toggle('slide-down');
-    header.classList.toggle('slide-up');
+    character.classList.toggle('collision');
+
     setTimeout(() => {
-        gameOverPanel.classList.toggle('hidden');
-    }, 500);
+        character.classList.toggle('slide-down');
+        header.classList.toggle('slide-up');
+        setTimeout(() => {
+            character.classList.toggle('collision');
+            gameOverPanel.classList.toggle('hidden');
+        }, 500);
+    }, 1000);
 
     field.innerHTML = '';
     launcher.innerHTML = '';
@@ -511,7 +521,9 @@ function gameOver() {
 async function fetchRandomWord() {
     const options = {
         method: 'GET',
-        headers: { 'X-Api-Key': `${API_KEY}` }
+        headers: {
+            'X-Api-Key': `${API_KEY}`
+        }
     };
 
     return fetch('https://api.api-ninjas.com/v1/randomword', options)
