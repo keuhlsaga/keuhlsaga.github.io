@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js"
+        integrity="sha512-STof4xm1wgkfm7heWqFJVn58Hm3EtS31XFaagaa8VMReCXAkQnJZ+jEy8PCC/iT18dFy95WcExNHFTqLyp72eQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js"></script>
+    <title>GoTyping</title>
+</head>
+
+<body>
+    <section class="container">
+        <div class="header slide-up">
+            <div class="header-wave">
+                <label>Wave</label>
+                <span id="wave">0</span>
+            </div>
+            <div class="header-streak">
+                <label>Streak</label>
+                <span id="streak">0</span>
+            </div>
+            <div class="header-score">
+                <label for="score">Score</label>
+                <span id="score">0</span>
+            </div>
+        </div>
+        <div class="title" id="loading">
+            <h3 class="type-writer-loading" id="typeWriterLoading"></h3>
+        </div>
+        <div class="title hidden" id="title">
+            <div class="text">
+                <h1 class="type-writer-loading"></h1>
+                <h4 class="type-writer-loading"></h4>
+                <button role="button" class="btn hidden" id="startBtn">START GAME</button>
+            </div>
+        </div>
+        <div class="wave">
+            <h3>Wave <span id="waveCleared"></span> cleared!</h3>
+        </div>
+        <div class="words"></div>
+        <div class="missiles"></div>
+        <div class="mobile-keyboard">
+            <div class="keyboard-layer">
+                <button class="keyboard-btn" role="button" value="q">q</button>
+                <button class="keyboard-btn" role="button" value="w">w</button>
+                <button class="keyboard-btn" role="button" value="e">e</button>
+                <button class="keyboard-btn" role="button" value="r">r</button>
+                <button class="keyboard-btn" role="button" value="t">t</button>
+                <button class="keyboard-btn" role="button" value="y">y</button>
+                <button class="keyboard-btn" role="button" value="u">u</button>
+                <button class="keyboard-btn" role="button" value="i">i</button>
+                <button class="keyboard-btn" role="button" value="o">o</button>
+                <button class="keyboard-btn" role="button" value="p">p</button>
+            </div>
+            <div class="keyboard-layer">
+                <button class="keyboard-btn" role="button" value="a">a</button>
+                <button class="keyboard-btn" role="button" value="s">s</button>
+                <button class="keyboard-btn" role="button" value="d">d</button>
+                <button class="keyboard-btn" role="button" value="f">f</button>
+                <button class="keyboard-btn" role="button" value="g">g</button>
+                <button class="keyboard-btn" role="button" value="h">h</button>
+                <button class="keyboard-btn" role="button" value="j">j</button>
+                <button class="keyboard-btn" role="button" value="k">k</button>
+                <button class="keyboard-btn" role="button" value="l">l</button>
+            </div>
+            <div class="keyboard-layer">
+                <button class="keyboard-btn" role="button" value="z">z</button>
+                <button class="keyboard-btn" role="button" value="x">x</button>
+                <button class="keyboard-btn" role="button" value="c">c</button>
+                <button class="keyboard-btn" role="button" value="v">v</button>
+                <button class="keyboard-btn" role="button" value="b">b</button>
+                <button class="keyboard-btn" role="button" value="n">n</button>
+                <button class="keyboard-btn" role="button" value="m">m</button>
+            </div>
+        </div>
+        <div class="character"></div>
+        <div class="title hidden" id="gameOver">
+            <div class="game-over">
+                <h2>Game Over</h2>
+                <div class="stats">
+                    <div class="stats-left">
+                        <div class="stats-item">
+                            <h4>Waves Cleared</h4>
+                            <span id="goWave"></span>
+                        </div>
+                        <div class="stats-item">
+                            <h4>Longest Streak</h4>
+                            <span id="goLongestStreak"></span>
+                        </div>
+                    </div>
+                    <div class="stats-right">
+                        <div class="stats-item">
+                            <h4>Score</h4>
+                            <span id="goScore"></span>
+                        </div>
+                        <div class="stats-item">
+                            <h4>Accuracy</h4>
+                            <span id="goAccuracy"></span>
+                        </div>
+                    </div>
+                </div>
+                <button role="button" class="btn" id="newGameBtn">New Game</button>
+            </div>
+        </div>
+    </section>
+</body>
+
+</html>
