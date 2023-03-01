@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js"
+        integrity="sha512-STof4xm1wgkfm7heWqFJVn58Hm3EtS31XFaagaa8VMReCXAkQnJZ+jEy8PCC/iT18dFy95WcExNHFTqLyp72eQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="stylesheet" href="style.css">
+    <title>GoMovies</title>
+</head>
+
+<body>
+    <section class="main">
+        <section class="wrapper">
+            <nav class="navbar navbar-expand-sm navbar-dark">
+                <div class="container-fluid container-xxl">
+                    <div class="navbar-center">
+                        <a class="navbar-brand m-0" href="">GoMovies</a>
+                        <ul class="navbar-nav">
+                            <li class="nav-item" id="navSearchBar">
+                                <div class="input-group" id="navSearchInput">
+                                    <input type="search" class="form-control shadow-none border-0" id="navSearchInputText"
+                                        placeholder="Search movies and TV shows...">
+                                    <select class="form-select shadow-none border-0" id="navSearchSelect">
+                                        <option value="movie">Movie</option>
+                                        <option value="tv">TV</option>
+                                    </select>
+                                    <a class="nav-link" id="navSearch" href="#">
+                                        <i class="bi bi-search" id="navSearchIcon"></i>
+                                    </a>
+                                    <div class="search-result hidden"></div>
+                                    <div class="spinner-inline hidden" id="searchDetailsSpinner">
+                                        <div class="arc-reactor-spinner spinner-dark">
+                                            <div class="outer"></div>
+                                            <div class="outer"></div>
+                                            <div class="outer"></div>
+                                            <div class="outer"></div>
+                                            <div class="outer"></div>
+                                            <div class="outer"></div>
+                                            <div class="outer"></div>
+                                            <div class="outer"></div>
+                                            <div class="outer"></div>
+                                            <div class="outer"></div>
+                                            <div class="center"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+            <section class="container-fluid container-xxl">
+                <section class="pop-down">
+                    <div class="details" id="searchDetails">
+                        <div class="details-content"></div>
+                    </div>
+                </section>
+                <section class="featured">
+                    <div class="featured-video">
+                        <div id="carouselMovie" class="carousel slide carousel-fade" data-bs-ride="carousel">
+                            <div class="carousel-inner"></div>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselMovie"
+                                data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Previous</span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#carouselMovie"
+                                data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Next</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="featured-poster">
+                        <div class="featured-poster-header">
+                            <h3>Trending today</h3>
+                        </div>
+                        <div class="featured-wrapper">
+                            <div class="featured-poster-up-next"></div>
+                        </div>
+                        <div class="arc-reactor-spinner spinner-center" id="carouselSpinner">
+                            <div class="outer"></div>
+                            <div class="outer"></div>
+                            <div class="outer"></div>
+                            <div class="outer"></div>
+                            <div class="outer"></div>
+                            <div class="outer"></div>
+                            <div class="outer"></div>
+                            <div class="outer"></div>
+                            <div class="outer"></div>
+                            <div class="outer"></div>
+                            <div class="center"></div>
+                        </div>
+                    </div>
+                </section>
+                <section id="movie">
+                    <h3 class="media-title">Movie</h3>
+                    <div class="group-header">
+                        <div class="nav-slider" id="movieNav">
+                            <button type="button" class="nav-slider-btn nav-slider-active" data-index="0">Latest</button>
+                            <button type="button" class="nav-slider-btn" data-index="1">Popular</button>
+                            <button type="button" class="nav-slider-btn" data-index="2">Upcoming</button>
+                            <span class="nav-slider-slider"></span>
+                        </div>
+                        <div class="slider-indicator"></div>
+                    </div>
+                    <div class="media-slider">
+                        <div class="arc-reactor-spinner spinner-center" id="movieSpinner">
+                            <div class="outer"></div>
+                            <div class="outer"></div>
+                            <div class="outer"></div>
+                            <div class="outer"></div>
+                            <div class="outer"></div>
+                            <div class="outer"></div>
+                            <div class="outer"></div>
+                            <div class="outer"></div>
+                            <div class="outer"></div>
+                            <div class="outer"></div>
+                            <div class="center"></div>
+                        </div>
+                        <button type="button" class="btn btn-lg btn-dark slider-btn-left hidden" id="slider-movie-btn-left"
+                            data-target="#sliderMovie">
+                            <div class="chevron"><i class="bi bi-chevron-left "></i></div>
+                        </button>
+                        <button type="button" class="btn btn-lg btn-dark slider-btn-right" id="slider-movie-btn-right"
+                            data-target="#sliderMovie">
+                            <div class="chevron"><i class="bi bi-chevron-right "></i></div>
+                        </button>
+                        <div class="slider snaps-inline" id="sliderMovie"></div>
+                    </div>
+                </section>
+                <section class="pop-down">
+                    <div class="details" id="movieDetails">
+                        <div class="details-content"></div>
+                    </div>
+                </section>
+                <section id="tv">
+                    <h3 class="media-title">TV Shows</h3>
+                    <div class="group-header">
+                        <div class="nav-slider" id="tvNav">
+                            <button type="button" class="nav-slider-btn nav-slider-active" data-index="0">Top
+                                Rated</button>
+                            <button type="button" class="nav-slider-btn" data-index="1">Airing Today</button>
+                            <span class="nav-slider-slider"></span>
+                        </div>
+                        <div class="slider-indicator"></div>
+                    </div>
+                    <div class="media-slider">
+                        <div class="arc-reactor-spinner spinner-center" id="tvSpinner">
+                            <div class="outer"></div>
+                            <div class="outer"></div>
+                            <div class="outer"></div>
+                            <div class="outer"></div>
+                            <div class="outer"></div>
+                            <div class="outer"></div>
+                            <div class="outer"></div>
+                            <div class="outer"></div>
+                            <div class="outer"></div>
+                            <div class="outer"></div>
+                            <div class="center"></div>
+                        </div>
+                        <button type="button" class="btn btn-lg btn-dark slider-btn-left hidden" id="slider-tv-btn-left"
+                            data-target="#sliderTv">
+                            <div class="chevron"><i class="bi bi-chevron-left"></i></div>
+                        </button>
+                        <button type="button" class="btn btn-lg btn-dark slider-btn-right" id="slider-tv-btn-right"
+                            data-target="#sliderTv">
+                            <div class="chevron"><i class="bi bi-chevron-right "></i></div>
+                        </button>
+                        <div class="slider snaps-inline" id="sliderTv"></div>
+                    </div>
+                </section>
+                <section class="pop-down">
+                    <div class="details" id="tvDetails">
+                        <div class="details-content"></div>
+                    </div>
+                </section>
+            </section>
+        </section>
+        <footer class="footer">
+            <div class="container-fluid container-xxl flex-column">
+                <a href="https://www.themoviedb.org">
+                    <img class="tmdb-logo" src="img/tmdb.svg" alt="The Movie Database (TMDB)" width="154" height="20">
+                </a>
+                <p>
+                    This product uses the TMDB API but is not endorsed or certified by TMDB.
+                    <a href="#" class="go-to-top"><i class="bi bi-arrow-up-circle" style="color:white;"></i></a>
+                </p>
+            </div>
+        </footer>
+    </section>
+    <section class="container-fluid container-xxl hidden">
+        <div class="carousel-trailer opacity-0">
+            <a href="#" id="closeTrailer"><i class="bi bi-arrow-left-circle"></i> Back</a>
+            <iframe id="trailerVideo" allowfullscreen></iframe>
+            <h2 class="hidden" id="noTrailer">No trailer available.</h2>
+        </div>
+    </section>
+    <a href="../index.html" class="go-to-portfolio"><i class="bi bi-arrow-left-circle"></i> Portfolio</a>
+    <script src="script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
